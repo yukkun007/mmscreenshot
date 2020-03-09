@@ -47,7 +47,7 @@ class ChromeDriver:
 
         logging.debug("driver.create/end")
 
-    def screenshot(self, url: str, xpath: str, out_file: str = "./screenshot.png"):
+    def screenshot(self, url: str, xpath: str, out_file: str = "/tmp/screenshot.png"):
         self._driver.get(url)
         element: WebElement = self._driver.find_element_by_xpath(xpath)
 
@@ -58,12 +58,13 @@ class ChromeDriver:
         #     f.write(png)
 
         # 代替の方法で実施
-        self._driver.get_screenshot_as_file("./screenshot_tmp.png")
+        tmp_out_file = "/tmp/screenshot_tmp.png"
+        self._driver.get_screenshot_as_file(tmp_out_file)
         left = int(element.location["x"])
         top = int(element.location["y"])
         right = int(element.location["x"] + element.size["width"])
         bottom = int(element.location["y"] + element.size["height"])
-        im = Image.open("./screenshot_tmp.png")
+        im = Image.open(tmp_out_file)
         im = im.crop((left, top, right, bottom))
         im.save(out_file)
 
