@@ -50,6 +50,12 @@ class ChromeDriver:
             f.write(png)
         self._driver.close()
 
+    def get_text(self, url: str, xpath: str, out_file: str = "./screenshot.png"):
+        self._driver.get(url)
+        text = self._driver.find_element_by_xpath(xpath).text
+        self._driver.close()
+        return text
+
     def _wait(self) -> None:
         WebDriverWait(self._driver, 10, poll_frequency=0.05).until(
             ec.presence_of_all_elements_located
