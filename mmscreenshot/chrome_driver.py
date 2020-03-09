@@ -1,5 +1,6 @@
 import os
 import logging
+from dotenv import load_dotenv
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -8,6 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 class ChromeDriver:
     def __init__(self) -> None:
         logging.debug("driver.create/start")
+        load_dotenv(verbose=True)
 
         options = ChromeOptions()
         binary_location = os.environ.get("CHROME_BINARY_LOCATION", None)
