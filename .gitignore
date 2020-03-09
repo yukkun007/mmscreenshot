@@ -115,8 +115,10 @@ dmypy.json
 
 # environment variable
 .env
+.env_old
 
 # document (とりあえずまだコミットしない)
 docs/
 
 screenshot.png
+screenshot_tmp.png

@@ -1,9 +1,11 @@
 import os
 import logging
+from PIL import Image
 from dotenv import load_dotenv
 from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.webelement import WebElement
 
 
 class ChromeDriver:
@@ -47,15 +49,27 @@ class ChromeDriver:
 
     def screenshot(self, url: str, xpath: str, out_file: str = "./screenshot.png"):
         self._driver.get(url)
-        png = self._driver.find_element_by_xpath(xpath).screenshot_as_png
-        with open(out_file, "wb") as f:
-            f.write(png)
-        self._driver.close()
+        element: WebElement = self._driver.find_element_by_xpath(xpath)
+
+        # 「element.screenshot_as_png」は、古いchromeだと実装されていないようで下記のようなエラーになる
+        # Message: unknown command: session/..../element/..../screenshot
+        # png = element.screenshot_as_png
+        # with open(out_file, "wb") as f:
+        #     f.write(png)
+
+        # 代替の方法で実施
+        self._driver.get_screenshot_as_file("./screenshot_tmp.png")
+        left = int(element.location["x"])
+        top = int(element.location["y"])
+        right = int(element.location["x"] + element.size["width"])
+        bottom = int(element.location["y"] + element.size["height"])
+        im = Image.open("./screenshot_tmp.png")
+        im = im.crop((left, top, right, bottom))
+        im.save(out_file)
 
     def get_text(self, url: str, xpath: str, out_file: str = "./screenshot.png"):
         self._driver.get(url)
         text = self._driver.find_element_by_xpath(xpath).text
-        self._driver.close()
         return text
 
     def _wait(self) -> None:
@@ -72,5 +86,6 @@ class ChromeDriver:
 
     def __del__(self):
         logging.debug("driver.quit/start")
+        self._driver.close()
         self._driver.quit()
         logging.debug("driver.quit/end")
