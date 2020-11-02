@@ -1,3 +1,3 @@
-from .core import hoge
+from .core import screenshot
 
-__all__ = ["hoge"]
+__all__ = ["screenshot"]

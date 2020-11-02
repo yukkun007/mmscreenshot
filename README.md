@@ -5,164 +5,194 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/3cfd46f37e08d3772808/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
 [![Requirements Status](https://requires.io/github/yukkun007/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/yukkun007/mmscreenshot/requirements/?branch=master)
 
-図書館で借りた本, 予約した本の状況を取得するライブラリ。
+指定したサイトのスクリーンショットを取得するライブラリ。
 
-## 必要な環境変数
+## Dependency
 
-プロジェクトディレクトリ直下に.envファイルを配置して下記を記載。
-
-```(sh)
-USER1='{"name": "yukkun007", "disp_name": "表示する名前", "id": "1111111", "password": "xxxxxxx"}'
-USER2='......'
-USER3='......'
-USER4='......'
-CHROME_BINARY_LOCATION='/usr/bin/google-chrome'
-CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
-```
-
-## 依存
-
-下記が必要。  
-バージョンを合わせる必要がある。  
+下記が必須。`serverless-chrome`を使う場合はバージョンの組合せに注意(後述)。
 
 - Chrome(headless-chromium)
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 
-### Chrome
+### serverless-chrome
 
-AWS(lambda)で動作させる場合、[serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)が使える。
-[ここ](https://hacknote.jp/archives/49974/)の通り、lambda layerにあげて使う。
-lambda layerにはChromeDriverも合わせてあげる。
-layerでは/opt/に配置されるので、それぞれ下記環境変数で場所を指定する。  
+AWS Lambdaで動作させる場合、[serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)がおすすめ。
 
-```(sh)
+- 最新のバージョンは1.0.0-55だが動かない
+- 以下の組み合わで動確([参照](https://github.com/adieuadieu/serverless-chrome/issues/133))
+  - [severless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)==1.0.0-37 (64.0.3282.167 stable channel)
+  - chromedriver==2.37
+  - selenium==3.141.0
+
+### Install Dependency
+
+#### ダウンロード先
+
+##### serverless-chrome
+
+- https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-37/stable-headless-chromium-amazonlinux-2017-03.zip
+
+##### Chromedriver
+
+- http://chromedriver.storage.googleapis.com/index.html?path=2.37/
+
+#### Install for AWS Lambda
+
+- `serverless-chrome`と`chromedriver`をLambda Layerにあげて使う([参照](https://hacknote.jp/archives/49974/))
+
+#### Install for Local (Mac)
+
+- `Google Chrome Canary`をインストール
+
+```sh
+brew install Caskroom/versions/google-chrome-canary
+/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --version
+```
+
+- `chromedriver`をダウンロードして配置
+
+```sh
+/usr/local/bin/chromedriver -v
+```
+
+### 環境変数
+
+`Chrome`および`ChromeDriver`のパスを環境変数として指定する。プロジェクトディレクトリ直下に、`.env`ファイルを配置して下記のように記載すれば良い。任意のファイルに記載して指定も可能。
+
+#### ローカル
+
+```env
+CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
+```
+
+#### AWS Lambda Layer
+
+Lambda Layerでは/opt/に配置される。
+
+```env
 CHROME_BINARY_LOCATION='/opt/headless/python/bin/headless-chromium'
 CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
 ```
 
-#### [serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)のChromeバージョン
+## Install
 
-[ここ](https://github.com/adieuadieu/serverless-chrome/issues/133)の通り、最新のバージョン(1.0.0-55)では動かせなかった。以下の組み合わせしか動かない。
-
-- selenium==3.141.0
-- chromedriver==2.37
-- [severless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)==1.0.0-37 (64.0.3282.167 stable channel)
-
-### ChromeDriver
-
-ChromeDriverはpythonモジュール([chromedriver-binary](https://pypi.org/project/chromedriver-binary/#history))でも導入出来るが複雑になるのでやってない。
-
-## インストール
-
-```(sh)
+```sh
 pip install git+https://github.com/yukkun007/mmscreenshot
 ```
 
-## アップグレード
+## Usage
 
-```(sh)
+```sh
+mmscreenshot --help
+mmscreenshot "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
+```
+
+## Usage (Use Module)
+
+[参照](Use Module)
+
+## Upgrade
+
+```sh
 pip install --upgrade git+https://github.com/yukkun007/mmscreenshot
 ```
 
-## 使い方 (コードからモジュールを利用)
+## Uninstall
 
-[参照](#モジュールを利用)
-
-## 使い方 (コマンドラインアプリ)
-
-```(sh)
-mmscreenshot --help
-```
-
-## アンインストール
-
-```(sh)
+```sh
 pip uninstall mmscreenshot
 ```
 
-## 開発フロー
+## Deveropment
 
-### 環境構築
+### Prepare
 
-1. プロジェクトディレクトリに仮想環境を作成するために下記環境変数を追加
+#### 環境変数追加
 
-   - Linux
+- `true`にするとprojectディレクトリ配下に仮想環境が作成される
 
-     ```(sh)
-     export PIPENV_VENV_IN_PROJECT=true
-     ```
+```sh
+export PIPENV_VENV_IN_PROJECT=true
+```
 
-   - Windows
+#### Pipenv導入
 
-     ```(sh)
-     set PIPENV_VENV_IN_PROJECT=true
-     ```
+```sh
+pip install pipenv
+```
 
-1. `pip install pipenv`
-1. `git clone git@github.com:yukkun007/mmscreenshot.git`
-1. `pipenv install --dev`
+#### Project 導入
 
-### install package
-
-下記は編集可能モードでインストールされる。
-
-```(sh)
+```sh
+git clone git@github.com:yukkun007/mmscreenshot.git
+cd mmscreenshot
+pipenv install --dev
 pip install -e .
 ```
 
-通常のインストールは下記だがソース編集の都度`upgrade package`が必要なので基本は`-e`をつける。
+### Run
 
-```(sh)
-pip install .
-```
-
-### upgrade package
-
-```(sh)
-pip install --upgrade . (もしくは-U)
-```
-
-## 開発行為
-
-### モジュールを利用
-
-```(python)
-$ python
->>> import mmscreenshot
->>> messages = mmscreenshot.search_rental({
-    "mode": "rental",
-    "all_user": False,
-    "users": ["hoge"],
-    "debug": False,
-    "zero_behavior": "message",
-    "separate": False
-})
->>> import pprint
->>> pprint.pprint(messages)
-```
-
-### コマンドラインアプリを実行
-
-```(sh)
+```sh
 pipenv run start (もしくはmmscreenshot)
+
 ```
 
-### unit test
+### Lint
 
-```(sh)
-pipenv run ut
-```
-
-### lint
-
-```(sh)
+```sh
 pipenv run lint
 ```
 
-### create api document (sphinx)
+### Unit Test
 
-```(sh)
+```sh
+pipenv run ut
+```
+
+### Create API Document (Sphinx)
+
+```sh
 pipenv run doc
+```
+
+### How to Use Module
+
+#### Install Package
+
+`-e`をつけると編集可能モードでインストールされるので便利。ソース編集の都度反映される。つけないと、都度`upgrade package`が必要になる。
+
+```sh
+pip install -e .
+```
+
+#### Use Module
+
+```python
+$ python
+>>> from mmscreenshot.chrome_driver import ChromeDriver
+>>> url = "https://weather.yahoo.co.jp/weather/jp/13/4410.html"
+>>> out_file = "./screenshot.png"
+>>> driver = ChromeDriver()
+>>> driver.screenshot(
+>>>     url,
+>>>     "//div[@class='forecastCity']/table/tbody/tr/td/div",
+>>>     out_file=out_file,
+>>> )
+```
+
+#### Upgrade Package (-e付きでInstallしたなら不要)
+
+```sh
+pip install --upgrade .
+or
+pip install -U .
+```
+
+#### Uninstall Package
+
+```sh
+pip uninstall mmscreenshot
 ```
 
 ## 配布物関連
@@ -173,13 +203,13 @@ pipenv run doc
 
 dist/ 以下に mmscreenshot-0.0.1.tar.gz が生成される。
 
-```(sh)
+```sh
 python setup.py sdist
 ```
 
 ### ソースコード配布物から pip でインストール
 
-```(sh)
+```sh
 pip install mmscreenshot-0.0.1-tar.gz
 ```
 
@@ -187,13 +217,13 @@ pip install mmscreenshot-0.0.1-tar.gz
 
 dist/ 以下に mmscreenshot-0.0.1-py3-none-any.whl が生成される。
 
-```(sh)
+```sh
 python setup.py bdist_wheel (wheelパッケージが必要)
 ```
 
 ### ビルド済み配布物(wheel 形式)から pip でインストール
 
-```(sh)
+```sh
 pip install mmscreenshot-0.0.1-py3-none-any.whl
 ```
 
