@@ -27,4 +27,4 @@ ut = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-
 utsp = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing -k TestChromeDriver ."
 ut_fast = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing -m 'not slow' ."
 lint = "flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot"
-doc = "./doc.sh"
+doc = "./script/doc.sh"

@@ -87,6 +87,9 @@ pip install git+https://github.com/yukkun007/mmscreenshot
 
 ```sh
 mmscreenshot --help
+```
+
+```sh
 mmscreenshot "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
 ```
 
@@ -112,10 +115,8 @@ pip uninstall mmscreenshot
 
 #### 環境変数追加
 
-- `true`にするとprojectディレクトリ配下に仮想環境が作成される
-
 ```sh
-export PIPENV_VENV_IN_PROJECT=true
+export PIPENV_VENV_IN_PROJECT=true  # 仮想環境はprojectディレクトリ配下に作成
 ```
 
 #### Pipenv導入
