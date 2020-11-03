@@ -22,10 +22,9 @@ python_version = "3.6"
 
 [scripts]
 v = "python --version"
-start = "mmscreenshot"
+start = "mmscreenshot -o \"./screenshot.png\" \"https://weather.yahoo.co.jp/weather/jp/13/4410.html\" \"//div[@class='forecastCity']/table/tbody/tr/td/div\""
 ut = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing ."
 utsp = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing -k TestChromeDriver ."
 ut_fast = "py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing -m 'not slow' ."
 lint = "flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot"
 doc = "./doc.sh"
-envenc = "travis encrypt-file .env"

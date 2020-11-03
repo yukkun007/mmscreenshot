@@ -1,23 +1,22 @@
 import argparse
 import logging
-import setenv
+
+from mmscreenshot.env import load_env
 from mmscreenshot.core import screenshot
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="""
-    HTMLのスクリーンショットを取得します。
+    HTMLのスクリーンショットを取得する。
     """
     )
 
     parser.add_argument("url", help="取得ページのURL")
     parser.add_argument("xpath", help="取得するHTML要素のXPath")
-    parser.add_argument("-o", "--out", help="スナップショットの出力先ファイルパス", default="./out.png")
-    parser.add_argument(
-        "-e", "--env", help=".envファイルのパスを指定します (デフォルトはカレントディレクトリの.env)", default=".env"
-    )
-    parser.add_argument("-d", "--debug", help="デバッグログ出力をONにします", action="store_true")
+    parser.add_argument("-o", "--out", help="スクリーンショット画像の出力先ファイルパス", default="./screenshot.png")
+    parser.add_argument("-e", "--env", help=".envファイルのパス (デフォルトはカレントディレクトリの.env)", default=".env")
+    parser.add_argument("-d", "--debug", help="デバッグログ出力をON", action="store_true")
 
     args = parser.parse_args()
 
@@ -29,7 +28,7 @@ def main():
     else:
         logging.basicConfig(format=formatter)
 
-    if setenv.load(args.env) is False:
+    if load_env(args.env) is False:
         parser.print_help()
         return
 

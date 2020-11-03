@@ -42,6 +42,8 @@ AWS Lambdaで動作させる場合、[serverless-chrome](https://github.com/adie
 
 #### Install for Local (Mac)
 
+インストールスクリプト→`script/install.sh`
+
 - `Google Chrome Canary`をインストール
 
 ```sh
@@ -128,14 +130,14 @@ pip install pipenv
 git clone git@github.com:yukkun007/mmscreenshot.git
 cd mmscreenshot
 pipenv install --dev
+pipenv shell
 pip install -e .
 ```
 
 ### Run
 
 ```sh
-pipenv run start (もしくはmmscreenshot)
-
+pipenv run start
 ```
 
 ### Lint
@@ -151,6 +153,8 @@ pipenv run ut
 ```
 
 ### Create API Document (Sphinx)
+
+`docs/_build/html`に出力される。
 
 ```sh
 pipenv run doc
@@ -168,24 +172,39 @@ pip install -e .
 
 #### Use Module
 
+スクリーンショットを取得。
+
 ```python
-$ python
->>> from mmscreenshot.chrome_driver import ChromeDriver
->>> url = "https://weather.yahoo.co.jp/weather/jp/13/4410.html"
->>> out_file = "./screenshot.png"
->>> driver = ChromeDriver()
->>> driver.screenshot(
->>>     url,
->>>     "//div[@class='forecastCity']/table/tbody/tr/td/div",
->>>     out_file=out_file,
->>> )
+from mmscreenshot.chrome_driver import ChromeDriver
+driver = ChromeDriver()
+driver.screenshot(
+    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
+    "//div[@class='forecastCity']/table/tbody/tr/td/div",
+    out_file="./screenshot.png",
+)
+```
+
+テキスト要素を取得。
+
+```python
+from mmscreenshot.chrome_driver import ChromeDriver
+driver = ChromeDriver()
+text = driver.get_text(
+    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
+    "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]"
+)
+print(text)
 ```
 
 #### Upgrade Package (-e付きでInstallしたなら不要)
 
 ```sh
 pip install --upgrade .
+```
+
 or
+
+```sh
 pip install -U .
 ```
 

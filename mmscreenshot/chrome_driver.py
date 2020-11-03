@@ -68,7 +68,7 @@ class ChromeDriver:
         im = im.crop((left, top, right, bottom))
         im.save(out_file)
 
-    def get_text(self, url: str, xpath: str, out_file: str = "./screenshot.png"):
+    def get_text(self, url: str, xpath: str):
         self._driver.get(url)
         text = self._driver.find_element_by_xpath(xpath).text
         return text

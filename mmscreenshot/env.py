@@ -2,7 +2,7 @@ import pathlib
 from dotenv import load_dotenv
 
 
-def load(dotenv_path: str) -> bool:
+def load_env(dotenv_path: str) -> bool:
     env = pathlib.Path(dotenv_path)
     if not env.exists():
         print(".env file is not found. : [{}]".format(dotenv_path))
