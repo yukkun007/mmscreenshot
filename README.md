@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/yukkun007/mmscreenshot.svg?branch=master)](https://travis-ci.org/yukkun007/mmscreenshot)
 [![codecov](https://codecov.io/gh/yukkun007/mmscreenshot/branch/master/graph/badge.svg)](https://codecov.io/gh/yukkun007/mmscreenshot)
-[![Maintainability](https://api.codeclimate.com/v1/badges/3cfd46f37e08d3772808/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
+[![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
 [![Requirements Status](https://requires.io/github/yukkun007/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/yukkun007/mmscreenshot/requirements/?branch=master)
 
 指定したサイトのスクリーンショットを取得するライブラリ。
