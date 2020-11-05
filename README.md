@@ -130,10 +130,12 @@ pip install pipenv
 ```sh
 git clone git@github.com:yukkun007/mmscreenshot.git
 cd mmscreenshot
-pipenv sync --dev
+pipenv sync --dev # "sync"でPipfile.lockに一致した環境になる
 pipenv shell
-pip install -e .
+pip install -e . # mmscreensho自体をinstall
 ```
+
+※ `pipenv sync`では「再ロック」(PipfileやPipfile.lockの内容更新)はされない
 
 ### Run
 
