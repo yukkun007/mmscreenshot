@@ -59,7 +59,7 @@ brew install Caskroom/versions/google-chrome-canary
 
 ### 環境変数
 
-`Chrome`および`ChromeDriver`のパスを環境変数として指定する。プロジェクトディレクトリ直下に、`.env`ファイルを配置して下記のように記載すれば良い。任意のファイルに記載して指定も可能。
+`Chrome`および`ChromeDriver`のパスを環境変数として指定する。プロジェクトディレクトリ直下に、`.env`ファイルを配置して下記のように記載すれば良い(`.env_sample`からコピーすると楽)。任意のファイルに記載して指定も可能。
 
 #### ローカル
 
@@ -136,6 +136,8 @@ pip install -e .
 ```
 
 ### Run
+
+`.env`の準備を忘れずに。
 
 ```sh
 pipenv run start
