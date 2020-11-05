@@ -25,7 +25,11 @@ setup(
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.6",
+<<<<<<< HEAD
     install_requires=["python-dotenv==0.12.0", "selenium==3.141.0", "pillow==7.0.0"],
+=======
+    install_requires=["python-dotenv==0.15.0", "selenium==3.141.0", "pillow==8.0.1"],
+>>>>>>> 09be1f9... [requires.io] dependency update
     entry_points="""
         [console_scripts]
         {app} = {app}.cli:main
