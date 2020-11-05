@@ -109,7 +109,7 @@ pip install --upgrade git+https://github.com/yukkun007/mmscreenshot
 pip uninstall mmscreenshot
 ```
 
-## Deveropment
+## Development
 
 ### Prepare
 
@@ -130,7 +130,7 @@ pip install pipenv
 ```sh
 git clone git@github.com:yukkun007/mmscreenshot.git
 cd mmscreenshot
-pipenv install --dev
+pipenv sync --dev
 pipenv shell
 pip install -e .
 ```
@@ -161,6 +161,18 @@ pipenv run ut
 
 ```sh
 pipenv run doc
+```
+
+### How to Update Dependency Modules
+
+```sh
+git checkout requires-io-master
+pipenv install --dev
+# run and test
+git add Pipfile.lock
+git commit -m "update modules"
+git push origin requires-io-master
+# merge branch "requires-io-master" at github web ui
 ```
 
 ### How to Use Module
