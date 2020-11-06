@@ -169,6 +169,7 @@ pipenv run doc
 
 ```sh
 git checkout requires-io-master
+# remove Pipfile.lock
 pipenv install --dev
 # run and test
 git add Pipfile.lock
