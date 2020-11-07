@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-PROJECT_NAME = "mmscreenshot"
 PACKAGE_NAME = "mmscreenshot"
 
 with open("README.md") as f:
@@ -11,7 +10,7 @@ with open("VERSION") as f:
 
 setup(
     # matadata
-    name=PROJECT_NAME,
+    name=PACKAGE_NAME,
     version=version,
     description="screen shot a part of html.",
     long_description=readme,
@@ -21,7 +20,7 @@ setup(
     # liscence=
     # platform=
     # options
-    packages=find_packages(PACKAGE_NAME),
+    packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.6",
