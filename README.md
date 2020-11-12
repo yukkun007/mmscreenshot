@@ -207,7 +207,8 @@ screenshot(
 from mmscreenshot import get_text
 text = get_text(
     "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
-    "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]"
+    "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]",
+    dotenv_path="/pat/to/.env"
 )
 print(text)
 ```
