@@ -193,9 +193,8 @@ pip install -e .
 スクリーンショットを取得。
 
 ```python
-from mmscreenshot.chrome_driver import ChromeDriver
-driver = ChromeDriver()
-driver.screenshot(
+from mmscreenshot import screenshot
+screenshot(
     "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
     "//div[@class='forecastCity']/table/tbody/tr/td/div",
     out_file="./screenshot.png",
@@ -205,9 +204,8 @@ driver.screenshot(
 テキスト要素を取得。
 
 ```python
-from mmscreenshot.chrome_driver import ChromeDriver
-driver = ChromeDriver()
-text = driver.get_text(
+from mmscreenshot import get_text
+text = get_text(
     "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
     "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]"
 )

@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from mmscreenshot.env import load_env
-from mmscreenshot.core import screenshot
+from mmscreenshot import screenshot
 
 
 def main():
