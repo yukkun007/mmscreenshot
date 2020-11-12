@@ -19,6 +19,8 @@ class TestChromeDriver:
             "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
             "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]",
         )
-        percent = int(test.replace("％", ""))
+        percent = 0
+        if test.replace("％", "") != "---":
+            percent = int(test.replace("％", ""))
         if percent > 10:
             print("今日は雨が降りそうです。\n  12-18時の降水確率: {}％".format(percent))
