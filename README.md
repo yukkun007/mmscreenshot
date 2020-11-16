@@ -7,16 +7,16 @@
 
 指定したサイトのスクリーンショットを取得するライブラリ。
 
-## Dependency
+## Requirements
 
 下記が必須。`serverless-chrome`を使う場合はバージョンの組合せに注意(後述)。
 
 - Chrome(headless-chromium)
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
 
-### serverless-chrome
+### [What is serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)
 
-AWS Lambdaで動作させる場合、[serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)がおすすめ。
+ChromeをAWS Lambdaで動作させる場合に利用できる。
 
 - 最新のバージョンは1.0.0-55だが動かない
 - 以下の組み合わで動確([参照](https://github.com/adieuadieu/serverless-chrome/issues/133))
@@ -24,25 +24,25 @@ AWS Lambdaで動作させる場合、[serverless-chrome](https://github.com/adie
   - chromedriver==2.37
   - selenium==3.141.0
 
-### Install Dependency
+### How to setup requirements
 
-#### ダウンロード先
+#### Downloads
 
 ##### serverless-chrome
 
-- https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-37/stable-headless-chromium-amazonlinux-2017-03.zip
+- <https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-37/stable-headless-chromium-amazonlinux-2017-03.zip>
 
 ##### Chromedriver
 
-- http://chromedriver.storage.googleapis.com/index.html?path=2.37/
+- <http://chromedriver.storage.googleapis.com/index.html?path=2.37/>
 
-#### Install for AWS Lambda
+#### Setup for AWS Lambda
 
 - `serverless-chrome`と`chromedriver`をLambda Layerにあげて使う([参照](https://hacknote.jp/archives/49974/))
 
-#### Install for Local (Mac)
+#### Setup for Local (Mac)
 
-インストールスクリプト→`script/install.sh`
+下記の通り。詳細は`script/install.sh`を参照。
 
 - `Google Chrome Canary`をインストール
 
@@ -57,18 +57,18 @@ brew install Caskroom/versions/google-chrome-canary
 /usr/local/bin/chromedriver -v
 ```
 
-### 環境変数
+#### Environment valiables
 
 `Chrome`および`ChromeDriver`のパスを環境変数として指定する。プロジェクトディレクトリ直下に、`.env`ファイルを配置して下記のように記載すれば良い(`.env_sample`からコピーすると楽)。任意のファイルに記載して指定も可能。
 
-#### ローカル
+##### Local
 
 ```env
 CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
 CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
 ```
 
-#### AWS Lambda Layer
+##### AWS Lambda Layer
 
 Lambda Layerでは/opt/に配置される。
 
@@ -77,13 +77,15 @@ CHROME_BINARY_LOCATION='/opt/headless/python/bin/headless-chromium'
 CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
 ```
 
-## Install
+## How to use
+
+### Install
 
 ```sh
 pip install git+https://github.com/yukkun007/mmscreenshot
 ```
 
-## Usage
+### Run with command line
 
 ```sh
 mmscreenshot --help
@@ -93,44 +95,58 @@ mmscreenshot --help
 mmscreenshot "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
 ```
 
-## Usage (Use Module)
+### Use module
 
-[参照](Use Module)
+スクリーンショットを取得。
 
-## Upgrade
+```python
+from mmscreenshot import screenshot
+screenshot(
+    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
+    "//div[@class='forecastCity']/table/tbody/tr/td/div",
+    out_file="./screenshot.png",
+)
+```
+
+テキスト要素を取得。
+
+```python
+from mmscreenshot import get_text
+text = get_text(
+    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
+    "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]",
+    dotenv_path="/pat/to/.env"
+)
+print(text)
+```
+
+### Upgrade
 
 ```sh
 pip install --upgrade git+https://github.com/yukkun007/mmscreenshot
 ```
 
-## Uninstall
+### Uninstall
 
 ```sh
 pip uninstall mmscreenshot
 ```
 
-## Development
+## Local Development
 
-### Prepare
+### How to setup
 
-#### 環境変数追加
+`pipenv`を使うので無ければ入れること。
 
-```sh
+```bash
 export PIPENV_VENV_IN_PROJECT=true  # 仮想環境はprojectディレクトリ配下に作成
+pip install pipenv # pipenvを導入
 ```
 
-#### Pipenv導入
-
-```sh
-pip install pipenv
-```
-
-#### Project 導入
-
-```sh
+```bash
 git clone git@github.com:yukkun007/mmscreenshot.git
 cd mmscreenshot
-pipenv sync --dev # "sync"でPipfile.lockに一致した環境になる
+pipenv sync --dev # "sync"でPipfile.lockと一致した環境になる
 pipenv shell
 pip install -e . # mmscreensho自体をinstall
 ```
@@ -139,7 +155,7 @@ pip install -e . # mmscreensho自体をinstall
 
 ### Run
 
-`.env`の準備を忘れずに。
+`.env`の準備を忘れずに。Yahoo天気予報がscreenshot.pngに保存される。
 
 ```sh
 pipenv run start
@@ -178,9 +194,9 @@ git push origin requires-io-master
 # merge branch "requires-io-master" at github web ui
 ```
 
-### How to Use Module
+### How to use module for local development
 
-#### Install Package
+#### Install package
 
 `-e`をつけると編集可能モードでインストールされるので便利。ソース編集の都度反映される。つけないと、都度`upgrade package`が必要になる。
 
@@ -188,32 +204,7 @@ git push origin requires-io-master
 pip install -e .
 ```
 
-#### Use Module
-
-スクリーンショットを取得。
-
-```python
-from mmscreenshot import screenshot
-screenshot(
-    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
-    "//div[@class='forecastCity']/table/tbody/tr/td/div",
-    out_file="./screenshot.png",
-)
-```
-
-テキスト要素を取得。
-
-```python
-from mmscreenshot import get_text
-text = get_text(
-    "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
-    "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]",
-    dotenv_path="/pat/to/.env"
-)
-print(text)
-```
-
-#### Upgrade Package (-e付きでInstallしたなら不要)
+#### Upgrade package (-e付きでInstallしたなら不要)
 
 ```sh
 pip install --upgrade .
@@ -225,7 +216,7 @@ or
 pip install -U .
 ```
 
-#### Uninstall Package
+#### Uninstall package
 
 ```sh
 pip uninstall mmscreenshot
