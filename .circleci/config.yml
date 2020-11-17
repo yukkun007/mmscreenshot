@@ -1,21 +1,64 @@
 version: 2.1
+executors:
+  my-executor:
+    docker:
+      - image: circleci/python:3.6.8
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+    working_directory: ~/CircleCIWork
 
-orbs:
-  python: circleci/python@0.2.1
+commands:
+  restore:
+    steps:
+      - restore_cache:
+          key: mmscreenshot-v3-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+
+  save:
+    steps:
+      - save_cache:
+          paths:
+            - ".venv"
+          key: mmscreenshot-v3-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 jobs:
-  build-and-test:
-    executor: python/default
+  setup:
+    executor: my-executor
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
+      - restore
       - run:
-          command: ./manage.py test
-          name: Test
+          name: install
+          command: |
+            sudo pip install pipenv
+            pipenv sync
+            pipenv run pip install -e .
+            pip install flake8==3.8.4
+      - save
+
+  lint:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: lint
+          command: |
+            flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
+
+  test:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: test
+          command: |
+            py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
 
 workflows:
-  main:
+  version: 2.1
+  build-and-test-workflow:
     jobs:
-      - build-and-test
+      - setup
+      - lint
+      - test
