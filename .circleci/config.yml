@@ -43,7 +43,7 @@ jobs:
       - run:
           name: lint
           command: |
-            flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
+            pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
 
   test:
     executor: my-executor
@@ -53,7 +53,7 @@ jobs:
       - run:
           name: test
           command: |
-            py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            pipenv run py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
 
 workflows:
   version: 2.1
