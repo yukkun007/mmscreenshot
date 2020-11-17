@@ -31,7 +31,8 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv sync
-            pip install flake8==3.8.4
+            pipenv run pip install -e .
+            pipenv run pip install flake8==3.8.4
       - save
 
   lint:
