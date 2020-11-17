@@ -31,7 +31,8 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv sync
-            pipenv run pip install -e .
+            pipenv shell
+            pip install -e .
             pip install flake8==3.8.4
       - save
 
@@ -60,5 +61,9 @@ workflows:
   build-and-test-workflow:
     jobs:
       - setup
-      - lint
-      - test
+      - lint:
+          requires:
+            - setup
+      - test:
+          requires:
+            - setup
