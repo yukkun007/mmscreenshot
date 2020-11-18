@@ -11,14 +11,14 @@ commands:
   restore:
     steps:
       - restore_cache:
-          key: mmscreenshot-v3-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v5-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
   save:
     steps:
       - save_cache:
           paths:
             - ".venv"
-          key: mmscreenshot-v3-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v5-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 jobs:
   setup:
