@@ -54,7 +54,7 @@ jobs:
       - run:
           name: test
           command: |
-            pipenv run py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
 
 workflows:
   version: 2.1
