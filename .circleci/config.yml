@@ -2,7 +2,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/python:3.6.8
+      - image: circleci/python:3.6.8-browsers
         environment:
           PIPENV_VENV_IN_PROJECT: true
     working_directory: ~/CircleCIWork
@@ -42,6 +42,12 @@ jobs:
       - run:
           name: lint
           command: |
+            whereis google-chrome-stable
+            google-chrome-stable --version
+            whereis google-chrome
+            google-chrome --version
+            whereis chromedriver
+            chromedriver --version
             pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
 
   test:
