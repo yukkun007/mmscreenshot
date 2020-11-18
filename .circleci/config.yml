@@ -30,10 +30,8 @@ jobs:
           name: install
           command: |
             sudo pip install pipenv
-            pipenv sync
+            pipenv sync --dev
             pipenv run pip install -e .
-            pipenv run pip install flake8==3.8.4
-            pipenv run pip install pytest==6.1.2
       - save
 
   lint:
