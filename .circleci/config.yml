@@ -1,0 +1,72 @@
+version: 2.1
+executors:
+  my-executor:
+    docker:
+      - image: circleci/python:3.6.8-browsers
+        environment:
+          PIPENV_VENV_IN_PROJECT: true
+          CHROME_BINARY_LOCATION: /usr/bin/google-chrome
+          CHROME_DRIVER_LOCATION: /usr/local/bin/chromedriver
+    working_directory: ~/CircleCIWork
+
+commands:
+  restore:
+    steps:
+      - restore_cache:
+          key: mmscreenshot-v6-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+
+  save:
+    steps:
+      - save_cache:
+          paths:
+            - ".venv"
+          key: mmscreenshot-v6-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+
+jobs:
+  setup:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: install
+          command: |
+            sudo pip install pipenv
+            pipenv sync --dev
+            pipenv run pip install -e .
+      - save
+
+  lint:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: lint
+          command: |
+            pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
+
+  test:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: test
+          command: |
+            pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: ./screenshot.png
+
+workflows:
+  version: 2.1
+  build-and-test-workflow:
+    jobs:
+      - setup
+      - lint:
+          requires:
+            - setup
+      - test:
+          requires:
+            - setup
