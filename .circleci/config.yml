@@ -33,6 +33,7 @@ jobs:
             pipenv sync
             pipenv run pip install -e .
             pipenv run pip install flake8==3.8.4
+            pipenv run pip install pytest==6.1.2
       - save
 
   lint:
@@ -53,7 +54,7 @@ jobs:
       - run:
           name: test
           command: |
-            pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            pipenv run py.test -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
 
 workflows:
   version: 2.1
