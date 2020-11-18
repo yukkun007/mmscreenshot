@@ -44,12 +44,6 @@ jobs:
       - run:
           name: lint
           command: |
-            whereis google-chrome-stable
-            google-chrome-stable --version
-            whereis google-chrome
-            google-chrome --version
-            whereis chromedriver
-            chromedriver --version
             pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
 
   test:
@@ -61,6 +55,10 @@ jobs:
           name: test
           command: |
             pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            bash <(curl -s https://codecov.io/bash)
+            mmscreenshot -o "./screenshot.png" "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
+      - store_artifacts:
+          path: ./screenshot.png
 
 workflows:
   version: 2.1
