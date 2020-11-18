@@ -2,7 +2,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/python:3.6.8-browsers
+      - image: circleci/python:3.8.1-browsers
         environment:
           PIPENV_VENV_IN_PROJECT: true
           CHROME_BINARY_LOCATION: /usr/bin/google-chrome
