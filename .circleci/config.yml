@@ -56,7 +56,6 @@ jobs:
           command: |
             pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
             bash <(curl -s https://codecov.io/bash)
-            pipenv run mmscreenshot -o "./screenshot.png" "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
       - store_artifacts:
           path: ./screenshot.png
 
