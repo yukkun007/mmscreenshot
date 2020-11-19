@@ -15,7 +15,6 @@ commands:
       - restore_cache:
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
-          name: install
           command: |
             echo normal_restore
 
@@ -23,12 +22,25 @@ commands:
     steps:
       - save_cache:
           paths:
-            - ".venv"
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
-          name: install
           command: |
             echo normal_save
+
+  lint:
+    steps:
+      - run:
+          command: |
+            pipenv run lint
+
+  test:
+    steps:
+      - run:
+          command: |
+            pipenv run ut
+            bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: ./screenshot.png
 
 jobs:
 
@@ -68,23 +80,14 @@ jobs:
     steps:
       - checkout
       - restore
-      - run:
-          name: lint
-          command: |
-            pipenv run lint
+      - lint
 
   test:
     executor: my-executor
     steps:
       - checkout
       - restore
-      - run:
-          name: test
-          command: |
-            pipenv run ut
-            bash <(curl -s https://codecov.io/bash)
-      - store_artifacts:
-          path: ./screenshot.png
+      - test
 
 workflows:
   version: 2.1
