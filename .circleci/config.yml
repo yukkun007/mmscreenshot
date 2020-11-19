@@ -14,6 +14,10 @@ commands:
     steps:
       - restore_cache:
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: install
+          command: |
+            echo normal_restore
 
   save:
     steps:
@@ -21,13 +25,14 @@ commands:
           paths:
             - ".venv"
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - run:
+          name: install
+          command: |
+            echo normal_save
 
 jobs:
 
   setup:
-    filters:
-      branches:
-        only: /requires-io-master/
     executor: my-executor
     steps:
       - checkout
@@ -37,8 +42,20 @@ jobs:
           command: |
             python --version
             sudo pip install pipenv
-            pipenv clean
-            pipenv --rm
+            pipenv sync --dev
+            pipenv run pip install -e .
+      - save
+
+  setup_for_requiresio:
+    executor: my-executor
+    steps:
+      - checkout
+      - restore
+      - run:
+          name: install
+          command: |
+            python --version
+            sudo pip install pipenv
             pipenv install --dev
             pipenv lock
             pipenv run pip install -e .
@@ -73,7 +90,14 @@ workflows:
   version: 2.1
   build-and-test-workflow:
     jobs:
-      - setup
+      - setup:
+          filters:
+            branches:
+              ignore: /requires-io-master/
+      - setup_for_requiresio:
+          filters:
+            branches:
+              only: /requires-io-master/
       - lint:
           requires:
             - setup
