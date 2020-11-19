@@ -22,6 +22,7 @@ commands:
     steps:
       - save_cache:
           paths:
+            - ".venv"
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
           command: |
