@@ -50,7 +50,7 @@ jobs:
       - run:
           name: lint
           command: |
-            pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
+            pipenv run lint
 
   test:
     executor: my-executor
@@ -60,7 +60,7 @@ jobs:
       - run:
           name: test
           command: |
-            pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            pipenv run ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
