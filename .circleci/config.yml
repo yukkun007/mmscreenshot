@@ -11,37 +11,30 @@ executors:
 
 commands:
   restore:
+    parameters:
+      keyfile:
+        type: string
+        default: "Pipfile.lock"
     steps:
       - restore_cache:
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum << parameters.keyfile >> }}
       - run:
           command: |
-            echo normal_restore
+            echo restore << parameters.keyfile >>
 
   save:
+    parameters:
+      keyfile:
+        type: string
+        default: "Pipfile.lock"
     steps:
       - save_cache:
           paths:
             - ".venv"
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum << parameters.keyfile >> }}
       - run:
           command: |
-            echo normal_save
-
-  lint:
-    steps:
-      - run:
-          command: |
-            pipenv run lint
-
-  test:
-    steps:
-      - run:
-          command: |
-            pipenv run ut
-            bash <(curl -s https://codecov.io/bash)
-      - store_artifacts:
-          path: ./screenshot.png
+            echo save << parameters.keyfile >> 
 
 jobs:
 
@@ -63,7 +56,8 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      - restore:
+          target: "Pipfile"
       - run:
           name: install
           command: |
@@ -72,39 +66,50 @@ jobs:
             pipenv install --dev
             pipenv lock
             pipenv run pip install -e .
-      - save
+      - save:
+          target: "Pipfile"
       - store_artifacts:
           path: ./Pipfile.lock
 
   lint:
     executor: my-executor
+    parameters:
+      keyfile:
+        type: string
+        default: "Pipefile.lock"
     steps:
       - checkout
       - restore
-      - lint
+          target: << parameters.keyfile >>
+      - run:
+          name: lint
+          command: |
+            pipenv run lint
 
   test:
     executor: my-executor
     steps:
       - checkout
-      - restore
-      - test
+      - restore:
+          target: 
+      - run:
+          name: test
+          command: |
+            pipenv run ut
+            bash <(curl -s https://codecov.io/bash)
+      - store_artifacts:
+          path: ./screenshot.png
 
 workflows:
   version: 2.1
   build-and-test-workflow:
+    when:
+      - equal: [ requires-io-master, << pipeline.git.branch >> ]
     jobs:
-      - setup:
-          filters:
-            branches:
-              ignore: /requires-io-master/
       - setup_for_requiresio:
-          filters:
-            branches:
-              only: /requires-io-master/
       - lint:
           requires:
-            - setup
+            - setup_for_requiresio
       - test:
           requires:
-            - setup
+            - setup_for_requiresio
