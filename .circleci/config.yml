@@ -13,14 +13,14 @@ commands:
   restore:
     steps:
       - restore_cache:
-          key: mmscreenshot-v9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v10-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
   save:
     steps:
       - save_cache:
           paths:
             - ".venv"
-          key: mmscreenshot-v9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          key: mmscreenshot-v10-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 jobs:
   setup:
@@ -37,8 +37,6 @@ jobs:
             pipenv --rm
             pipenv install --dev
             pipenv run pip install -e .
-            which pytest
-            which flake8
             pipenv run pytest
             pipenv run flake8
             pipenv lock
