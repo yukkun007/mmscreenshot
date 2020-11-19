@@ -23,7 +23,11 @@ commands:
           key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 jobs:
+
   setup:
+    filters:
+      branches:
+        only: /requires-io-master/
     executor: my-executor
     steps:
       - checkout
@@ -36,8 +40,8 @@ jobs:
             pipenv clean
             pipenv --rm
             pipenv install --dev
-            pipenv run pip install -e .
             pipenv lock
+            pipenv run pip install -e .
       - save
       - store_artifacts:
           path: ./Pipfile.lock
