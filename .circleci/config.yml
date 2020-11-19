@@ -31,10 +31,16 @@ jobs:
       - run:
           name: install
           command: |
+            python --version
             sudo pip install pipenv
             pipenv clean
+            pipenv --rm
             pipenv install --dev
             pipenv run pip install -e .
+            which pytest
+            which flake8
+            pipenv run pytest
+            pipenv run flake8
             pipenv lock
       - save
       - store_artifacts:
