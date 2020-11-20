@@ -14,10 +14,10 @@ commands:
     parameters:
       keyfile:
         type: string
-        default: "Pipfile.lock"
+        default: Pipfile.lock
     steps:
       - restore_cache:
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum << parameters.keyfile >> }}
+          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "<< parameters.keyfile >>" }}
       - run:
           command: |
             echo restore << parameters.keyfile >>
@@ -26,12 +26,12 @@ commands:
     parameters:
       keyfile:
         type: string
-        default: "Pipfile.lock"
+        default: Pipfile.lock
     steps:
       - save_cache:
           paths:
             - ".venv"
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum << parameters.keyfile >> }}
+          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "<< parameters.keyfile >>" }}
       - run:
           command: |
             echo save << parameters.keyfile >> 
