@@ -1,7 +1,6 @@
 # mmscreenshot
 
 [![yukkun007](https://img.shields.io/circleci/build/github/yukkun007/mmscreenshot)](https://circleci.com/gh/yukkun007/mmscreenshot)
-[![Build Status](https://travis-ci.org/yukkun007/mmscreenshot.svg?branch=master)](https://travis-ci.org/yukkun007/mmscreenshot)
 [![codecov](https://codecov.io/gh/yukkun007/mmscreenshot/branch/master/graph/badge.svg)](https://codecov.io/gh/yukkun007/mmscreenshot)
 [![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
 [![Requirements Status](https://requires.io/github/yukkun007/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/yukkun007/mmscreenshot/requirements/?branch=master)

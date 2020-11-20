@@ -14,7 +14,7 @@ commands:
     steps:
       - when:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
@@ -23,7 +23,7 @@ commands:
                   echo restore by Pipfile
       - unless:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
@@ -53,9 +53,9 @@ jobs:
       - checkout
       - when:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - run: echo ----------- requires ---------------- << pipeline.git.branch >>
+            - run: echo ----------- requires ---------------- 
             - restore
             - run:
                 name: install_and_pipenv_lock
@@ -69,9 +69,9 @@ jobs:
                 keyfile: Pipfile
       - unless:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - run: echo ----------- normal ---------------- << pipeline.git.branch >>
+            - run: echo ----------- normal ----------------
             - restore
             - run:
                 name: install
@@ -101,12 +101,12 @@ jobs:
       - checkout
       - when:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore
       - unless:
           condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore
       - run:
