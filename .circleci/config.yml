@@ -55,7 +55,7 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - run: echo ----------- normal ----------------
+            - run: echo ----------- requires ----------------
             - restore
             - run:
                 name: install_and_pipenv_lock
@@ -71,7 +71,7 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - run: echo ----------- requires ----------------
+            - run: echo ----------- normal ----------------
             - restore
             - run:
                 name: install
@@ -89,16 +89,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - when:
-          condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
-          steps:
-            - restore
-      - unless:
-          condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
-          steps:
-            - restore
+      - restore
       - run:
           name: lint
           command: |
