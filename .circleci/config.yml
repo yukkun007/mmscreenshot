@@ -50,28 +50,49 @@ jobs:
             sudo pip install pipenv
             pipenv sync --dev
             pipenv run pip install -e .
-      - save
+      - save:
+          keyfile: "Pipefile.lock"
 
   setup_for_requiresio:
     executor: my-executor
     steps:
       - checkout
-      - restore:
-          target: "Pipfile"
-      - run:
-          name: install
-          command: |
-            python --version
-            sudo pip install pipenv
-            pipenv install --dev
-            pipenv lock
-            pipenv run pip install -e .
-      - save:
-          target: "Pipfile"
-      - store_artifacts:
-          path: ./Pipfile.lock
+      - when:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - run: echo ----------- requires ----------------
+            - restore:
+                keyfile: "Pipfile"
+            - run:
+                name: install
+                command: |
+                  python --version
+                  sudo pip install pipenv
+                  pipenv install --dev
+                  pipenv lock
+                  pipenv run pip install -e .
+            - save:
+                keyfile: "Pipfile"
+            - store_artifacts:
+                path: ./Pipfile.lock
 
   lint:
+    executor: my-executor
+    steps:
+      - checkout
+      - when:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore:
+                keyfile: Pipefile
+            - run:
+                name: lint
+                command: |
+                  pipenv run lint
+
+  test:
     executor: my-executor
     parameters:
       keyfile:
@@ -79,19 +100,8 @@ jobs:
         default: "Pipefile.lock"
     steps:
       - checkout
-      - restore
-          target: << parameters.keyfile >>
-      - run:
-          name: lint
-          command: |
-            pipenv run lint
-
-  test:
-    executor: my-executor
-    steps:
-      - checkout
       - restore:
-          target: 
+          keyfile: << parameters.keyfile >>
       - run:
           name: test
           command: |
@@ -103,10 +113,8 @@ jobs:
 workflows:
   version: 2.1
   build-and-test-workflow:
-    when:
-      - equal: [ requires-io-master, << pipeline.git.branch >> ]
     jobs:
-      - setup_for_requiresio:
+      - setup_for_requiresio
       - lint:
           requires:
             - setup_for_requiresio
