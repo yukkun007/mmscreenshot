@@ -44,28 +44,11 @@ jobs:
       - checkout
       - when:
           condition:
-            not:
-              equal: [ requires-io-master, {{ .Branch }} ]
+            qual: [ requires-io-master, {{ .Branch }} ]
           steps:
             - run: echo ----------- normal ----------------
             - restore:
-                keyfile: Pipefile.lock
-            - run:
-                name: install
-                command: |
-                  python --version
-                  sudo pip install pipenv
-                  pipenv sync --dev
-                  pipenv run pip install -e .
-            - save:
-                keyfile: Pipefile.lock
-      - unless:
-          condition:
-            equal: [ requires-io-master, {{ .Branch }} ]
-          steps:
-            - run: echo ----------- requires ----------------
-            - restore:
-                keyfile: Pipfile
+                keyfile: Pipefile
             - run:
                 name: install_and_pipenv_lock
                 command: |
@@ -75,7 +58,23 @@ jobs:
                   pipenv lock
                   pipenv run pip install -e .
             - save:
-                keyfile: Pipfile
+                keyfile: Pipefile
+      - unless:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - run: echo ----------- requires ----------------
+            - restore:
+                keyfile: Pipfile.lock
+            - run:
+                name: install
+                command: |
+                  python --version
+                  sudo pip install pipenv
+                  pipenv sync --dev
+                  pipenv run pip install -e .
+            - save:
+                keyfile: Pipfile.lock
             - store_artifacts:
                 path: ./Pipfile.lock
 
@@ -85,17 +84,16 @@ jobs:
       - checkout
       - when:
           condition:
-            not:
-              equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - restore:
-                keyfile: Pipefile.lock
+                keyfile: Pipefile
       - unless:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - restore:
-                keyfile: Pipefile
+                keyfile: Pipefile.lock
       - run:
           name: lint
           command: |
@@ -107,17 +105,16 @@ jobs:
       - checkout
       - when:
           condition:
-            not:
-              equal: [ requires-io-master, {{ .Branch }} ]
+            equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - restore:
-                keyfile: Pipefile.lock
+                keyfile: Pipefile
       - unless:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - restore:
-                keyfile: Pipefile
+                keyfile: Pipefile.lock
       - run:
           name: test
           command: |
