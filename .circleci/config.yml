@@ -55,7 +55,7 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - run: echo ----------- requires ----------------
+            - run: echo ----------- requires ---------------- << pipeline.git.branch >>
             - restore
             - run:
                 name: install_and_pipenv_lock
@@ -71,7 +71,7 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - run: echo ----------- normal ----------------
+            - run: echo ----------- normal ---------------- << pipeline.git.branch >>
             - restore
             - run:
                 name: install
