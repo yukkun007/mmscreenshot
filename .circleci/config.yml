@@ -42,30 +42,32 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - restore
-      - run:
-          name: install
-          command: |
-            python --version
-            sudo pip install pipenv
-            pipenv sync --dev
-            pipenv run pip install -e .
-      - save:
-          keyfile: "Pipefile.lock"
-
-  setup_for_requiresio:
-    executor: my-executor
-    steps:
-      - checkout
       - when:
+          condition:
+            not:
+              equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - run: echo ----------- normal ----------------
+            - restore:
+                keyfile: Pipefile.lock
+            - run:
+                name: install
+                command: |
+                  python --version
+                  sudo pip install pipenv
+                  pipenv sync --dev
+                  pipenv run pip install -e .
+            - save:
+                keyfile: Pipefile.lock
+      - unless:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - run: echo ----------- requires ----------------
             - restore:
-                keyfile: "Pipfile"
+                keyfile: Pipfile
             - run:
-                name: install
+                name: install_and_pipenv_lock
                 command: |
                   python --version
                   sudo pip install pipenv
@@ -73,7 +75,7 @@ jobs:
                   pipenv lock
                   pipenv run pip install -e .
             - save:
-                keyfile: "Pipfile"
+                keyfile: Pipfile
             - store_artifacts:
                 path: ./Pipfile.lock
 
@@ -83,25 +85,39 @@ jobs:
       - checkout
       - when:
           condition:
+            not:
+              equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore:
+                keyfile: Pipefile.lock
+      - unless:
+          condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - restore:
                 keyfile: Pipefile
-            - run:
-                name: lint
-                command: |
-                  pipenv run lint
+      - run:
+          name: lint
+          command: |
+            pipenv run lint
 
   test:
     executor: my-executor
-    parameters:
-      keyfile:
-        type: string
-        default: "Pipefile.lock"
     steps:
       - checkout
-      - restore:
-          keyfile: << parameters.keyfile >>
+      - when:
+          condition:
+            not:
+              equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore:
+                keyfile: Pipefile.lock
+      - unless:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore:
+                keyfile: Pipefile
       - run:
           name: test
           command: |
@@ -114,10 +130,10 @@ workflows:
   version: 2.1
   build-and-test-workflow:
     jobs:
-      - setup_for_requiresio
+      - setup
       - lint:
           requires:
-            - setup_for_requiresio
+            - setup
       - test:
           requires:
-            - setup_for_requiresio
+            - setup
