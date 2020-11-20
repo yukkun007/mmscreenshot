@@ -11,16 +11,25 @@ executors:
 
 commands:
   restore:
-    parameters:
-      keyfile:
-        type: string
-        default: Pipfile.lock
     steps:
-      - restore_cache:
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "<< parameters.keyfile >>" }}
-      - run:
-          command: |
-            echo restore << parameters.keyfile >>
+      - when:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore_cache:
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+            - run:
+                command: |
+                  echo restore by Pipfile
+      - unless:
+          condition:
+            equal: [ requires-io-master, {{ .Branch }} ]
+          steps:
+            - restore_cache:
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - run:
+                command: |
+                  echo restore by Pipfile.lock
 
   save:
     parameters:
@@ -47,8 +56,7 @@ jobs:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - run: echo ----------- normal ----------------
-            - restore:
-                keyfile: Pipfile
+            - restore
             - run:
                 name: install_and_pipenv_lock
                 command: |
@@ -64,8 +72,7 @@ jobs:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
             - run: echo ----------- requires ----------------
-            - restore:
-                keyfile: Pipfile.lock
+            - restore
             - run:
                 name: install
                 command: |
@@ -86,14 +93,12 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - restore:
-                keyfile: Pipfile
+            - restore
       - unless:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - restore:
-                keyfile: Pipfile.lock
+            - restore
       - run:
           name: lint
           command: |
@@ -107,14 +112,12 @@ jobs:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - restore:
-                keyfile: Pipfile
+            - restore
       - unless:
           condition:
             equal: [ requires-io-master, {{ .Branch }} ]
           steps:
-            - restore:
-                keyfile: Pipfile.lock
+            - restore
       - run:
           name: test
           command: |
