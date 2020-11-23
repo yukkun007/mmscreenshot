@@ -15,10 +15,10 @@ pytest = "==6.1.2"
 black = "==20.8b1"
 pytest-cov = "==2.10.1"
 coverage = "==5.3"
-sphinx = "*"
+sphinx = "==3.3.1"
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
 
 [scripts]
 v = "python --version"

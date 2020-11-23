@@ -2,7 +2,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/python:3.6.8-browsers
+      - image: circleci/python:3.8.1-browsers
         environment:
           PIPENV_VENV_IN_PROJECT: true
           CHROME_BINARY_LOCATION: /usr/bin/google-chrome
@@ -12,29 +12,75 @@ executors:
 commands:
   restore:
     steps:
-      - restore_cache:
-          key: mmscreenshot-v6-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - when:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - restore_cache:
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - unless:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - restore_cache:
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
   save:
     steps:
-      - save_cache:
-          paths:
-            - ".venv"
-          key: mmscreenshot-v6-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+      - when:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - save_cache:
+                paths:
+                  - ".venv"
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+      - unless:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - save_cache:
+                paths:
+                  - ".venv"
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
 jobs:
+
   setup:
     executor: my-executor
     steps:
       - checkout
-      - restore
-      - run:
-          name: install
-          command: |
-            sudo pip install pipenv
-            pipenv sync --dev
-            pipenv run pip install -e .
-      - save
+      - when:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - restore
+            - run:
+                name: Install for Requires.io
+                command: |
+                  python --version
+                  sudo pip install pipenv
+                  pipenv install --dev
+                  pipenv lock
+                  pipenv run pip install -e .
+                  pipenv run pip list installed
+            - save
+            - store_artifacts:
+                path: ./Pipfile.lock
+      - unless:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - restore
+            - run:
+                name: Install
+                command: |
+                  python --version
+                  sudo pip install pipenv
+                  pipenv sync --dev
+                  pipenv run pip install -e .
+                  pipenv run pip list installed
+            - save
 
   lint:
     executor: my-executor
@@ -42,9 +88,9 @@ jobs:
       - checkout
       - restore
       - run:
-          name: lint
+          name: Lint
           command: |
-            pipenv run flake8 --max-line-length=100 --ignore=E203,W503 mmscreenshot
+            pipenv run lint
 
   test:
     executor: my-executor
@@ -52,9 +98,9 @@ jobs:
       - checkout
       - restore
       - run:
-          name: test
+          name: Test
           command: |
-            pipenv run pytest -v --capture=no --cov-config .coveragerc --cov=mmscreenshot --cov-report=xml --cov-report term-missing .
+            pipenv run ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
