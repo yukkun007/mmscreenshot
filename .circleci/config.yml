@@ -18,18 +18,12 @@ commands:
           steps:
             - restore_cache:
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
-            - run:
-                command: |
-                  echo restore by Pipfile
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - run:
-                command: |
-                  echo restore by Pipfile.lock
 
   save:
     steps:
@@ -41,9 +35,6 @@ commands:
                 paths:
                   - ".venv"
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
-            - run:
-                command: |
-                  echo restore by Pipfile
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
@@ -52,9 +43,6 @@ commands:
                 paths:
                   - ".venv"
                 key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - run:
-                command: |
-                  echo restore by Pipfile.lock
 
 jobs:
 
@@ -68,7 +56,7 @@ jobs:
           steps:
             - restore
             - run:
-                name: install_for_requires-io
+                name: Install for Requires.io
                 command: |
                   python --version
                   sudo pip install pipenv
@@ -85,7 +73,7 @@ jobs:
           steps:
             - restore
             - run:
-                name: install
+                name: Install
                 command: |
                   python --version
                   sudo pip install pipenv
@@ -100,7 +88,7 @@ jobs:
       - checkout
       - restore
       - run:
-          name: lint
+          name: Lint
           command: |
             pipenv run lint
 
@@ -110,7 +98,7 @@ jobs:
       - checkout
       - restore
       - run:
-          name: test
+          name: Test
           command: |
             pipenv run ut
             bash <(curl -s https://codecov.io/bash)
