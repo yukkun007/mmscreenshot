@@ -32,18 +32,29 @@ commands:
                   echo restore by Pipfile.lock
 
   save:
-    parameters:
-      keyfile:
-        type: string
-        default: Pipfile.lock
     steps:
-      - save_cache:
-          paths:
-            - ".venv"
-          key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "<< parameters.keyfile >>" }}
-      - run:
-          command: |
-            echo save << parameters.keyfile >> 
+      - when:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - save_cache:
+                paths:
+                  - ".venv"
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+            - run:
+                command: |
+                  echo restore by Pipfile
+      - unless:
+          condition:
+            equal: [ requires-io-master, << pipeline.git.branch >> ]
+          steps:
+            - save_cache:
+                paths:
+                  - ".venv"
+                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - run:
+                command: |
+                  echo restore by Pipfile.lock
 
 jobs:
 
@@ -55,23 +66,23 @@ jobs:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - run: echo ----------- requires ---------------- 
             - restore
             - run:
-                name: install_and_pipenv_lock
+                name: install_for_requires-io
                 command: |
                   python --version
                   sudo pip install pipenv
                   pipenv install --dev
                   pipenv lock
                   pipenv run pip install -e .
-            - save:
-                keyfile: Pipfile
+                  pipenv run pip list installed
+            - save
+            - store_artifacts:
+                path: ./Pipfile.lock
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - run: echo ----------- normal ----------------
             - restore
             - run:
                 name: install
@@ -80,10 +91,8 @@ jobs:
                   sudo pip install pipenv
                   pipenv sync --dev
                   pipenv run pip install -e .
-            - save:
-                keyfile: Pipfile.lock
-            - store_artifacts:
-                path: ./Pipfile.lock
+                  pipenv run pip list installed
+            - save
 
   lint:
     executor: my-executor
@@ -99,16 +108,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - when:
-          condition:
-            equal: [ requires-io-master, << pipeline.git.branch >> ]
-          steps:
-            - restore
-      - unless:
-          condition:
-            equal: [ requires-io-master, << pipeline.git.branch >> ]
-          steps:
-            - restore
+      - restore
       - run:
           name: test
           command: |
