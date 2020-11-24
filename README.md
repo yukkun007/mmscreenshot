@@ -39,6 +39,9 @@ ChromeをAWS Lambdaで動作させる場合に利用できる。
 #### Setup for AWS Lambda
 
 - `serverless-chrome`と`chromedriver`をLambda Layerにあげて使う([参照](https://hacknote.jp/archives/49974/))
+- フォントがない場合文字化けする
+  - Lambdaにデプロイするパッケージのルートに`.fonts`ディレクトリを作成してフォントを格納する([参照](https://qiita.com/havveFn/items/bb8cd0d937c671100200))
+  - CircleCI等でも文字化けするが、同様に`~/.fonts`に置くか[インストール](https://worklog.be/archives/3422#Google_Noto_Fonts)すれば良い
 
 #### Setup for Local (Mac)
 
