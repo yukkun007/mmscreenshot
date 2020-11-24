@@ -124,10 +124,26 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "text": [
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants\n\n *Please select a restaurant:*"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
                     {
-                      "type": "mrkdwn",
-                      "text": "*This is a text notification* $CIRCLE_BRANCH"
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "Ler Ros",
+                        "emoji": true
+                      },
+                      "value": "click_me_123",
+                      "url": "https://google.com"
                     }
                   ]
                 }
