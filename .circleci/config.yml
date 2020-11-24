@@ -64,7 +64,8 @@ jobs:
                   pipenv lock
                   pipenv run pip install -e .
                   pipenv run pip list installed
-                  sudo yum -y install ipa-gothic-fonts ipa-mincho-fonts ipa-pgothic-fonts ipa-pmincho-fonts
+                  sudo apt install -y fonts-ipafont
+                  fc-cache -fv
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
@@ -81,7 +82,8 @@ jobs:
                   pipenv sync --dev
                   pipenv run pip install -e .
                   pipenv run pip list installed
-                  sudo yum -y install ipa-gothic-fonts ipa-mincho-fonts ipa-pgothic-fonts ipa-pmincho-fonts
+                  sudo apt install -y fonts-ipafont
+                  fc-cache -fv
             - save
 
   lint:
