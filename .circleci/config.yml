@@ -9,6 +9,9 @@ executors:
           CHROME_DRIVER_LOCATION: /usr/local/bin/chromedriver
     working_directory: ~/CircleCIWork
 
+orbs:
+  slack: circleci/slack@4.1.2
+
 commands:
   restore:
     steps:
@@ -95,6 +98,12 @@ jobs:
           name: Lint
           command: |
             pipenv run lint
+      - slack/notify:
+          event: always
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
 
   test:
     executor: my-executor
@@ -108,6 +117,23 @@ jobs:
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
+      - slack/notify:
+          event: always
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*This is a text notification*",
+                      "emoji": true
+                    }
+                  ]
+                }
+              ]
+            }
 
 workflows:
   version: 2.1
@@ -117,6 +143,8 @@ workflows:
       - lint:
           requires:
             - setup
+          context: slack-secrets
       - test:
           requires:
             - setup
+          context: slack-secrets
