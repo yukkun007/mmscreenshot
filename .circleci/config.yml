@@ -124,11 +124,10 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "fields": [
+                  "text": [
                     {
                       "type": "mrkdwn",
-                      "text": "*This is a text notification*  << pipeline.git.branch >> ",
-                      "emoji": true
+                      "text": "*This is a text notification* $CIRCLE_BRANCH"
                     }
                   ]
                 }
