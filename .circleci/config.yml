@@ -143,8 +143,8 @@ workflows:
       - lint:
           requires:
             - setup
-          context: slack-secrets
+          context: ci
       - test:
           requires:
             - setup
-          context: slack-secrets
+          context: ci
