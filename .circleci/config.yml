@@ -126,7 +126,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants\n\n *Please select a restaurant:*"
+                    "text": "Hello, Assistant ${CIRCLE_BRANCH} to the Regional Manager Dwight! *Michael Scott* wants\n\n *Please select a restaurant:*"
                   }
                 },
                 {
