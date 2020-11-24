@@ -126,8 +126,8 @@ jobs:
                   "type": "section",
                   "fields": [
                     {
-                      "type": "plain_text",
-                      "text": "*This is a text notification*",
+                      "type": "mrkdwn",
+                      "text": "*This is a text notification*  << pipeline.git.branch >> ",
                       "emoji": true
                     }
                   ]
