@@ -24,9 +24,8 @@ commands:
                 {
                   "type": "section",
                   "text": {
-                    "type": "plain_text",
-                    "text": ":circleci-fail: *${CIRCLE_JOB}* ジョブが失敗しました。\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}",
-                    "emoji": true
+                    "type": "mrkdwn",
+                    "text": "⚠ *${CIRCLE_JOB}* ジョブが失敗しました。\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}"
                   }
                 },
                 {
