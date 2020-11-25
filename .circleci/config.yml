@@ -13,18 +13,46 @@ orbs:
   slack: circleci/slack@4.1.2
 
 commands:
-  notify_slack:
+  notify_success_slack:
     steps:
       - slack/notify:
-          event: fail
+          event: pass
           custom: |
             {
               "blocks": [
                 {
                   "type": "section",
                   "text": {
-                    "type": "mrkdwn",
-                    "text": "⚠ *${CIRCLE_JOB}* ジョブが失敗しました。\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}"
+                    "type": "plain_text",
+                    "text": ":tada: ${CIRCLE_JOB} ジョブが成功しました。",
+                    "emoji": true
+                  },
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repogitory*:\\n${CIRCLE_PROJECT_REPONAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\\n${CIRCLE_BRANCH}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commiter*:\\n${CIRCLE_USERNAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*SHA*:\\n${CIRCLE_SHA1}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
+                    }
+                  ],
+                  "accessory": {
+                    "type": "image",
+                    "image_url": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png",
+                    "alt_text": "CircleCI logo"
                   }
                 },
                 {
@@ -35,9 +63,65 @@ commands:
                       "text": {
                         "type": "plain_text",
                         "text": "View Job",
-                        "emoji": true
                       },
-                      "value": "click_me_123",
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+
+  notify_fail_slack:
+    steps:
+      - slack/notify:
+          event: always
+          # event: fail
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "⚠ *${CIRCLE_JOB}* ジョブが失敗しました。"
+                  },
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repogitory*:\\n${CIRCLE_PROJECT_REPONAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch*:\\n${CIRCLE_BRANCH}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commiter*:\\n${CIRCLE_USERNAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*SHA*:\\n${CIRCLE_SHA1}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
+                    }
+                  ],
+                  "accessory": {
+                    "type": "image",
+                    "image_url": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png",
+                    "alt_text": "CircleCI logo"
+                  }
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job"
+                      },
                       "url": "${CIRCLE_BUILD_URL}"
                     }
                   ]
@@ -102,6 +186,8 @@ jobs:
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
+            - notify_success_slack
+            - notify_fail_slack
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
@@ -118,6 +204,7 @@ jobs:
                   pwd
                   whoami
             - save
+            - notify_fail_slack
 
   lint:
     executor: my-executor
@@ -128,7 +215,7 @@ jobs:
           name: Lint
           command: |
             pipenv run lint
-      - notify_slack
+      - notify_fail_slack
 
   test:
     executor: my-executor
@@ -142,7 +229,7 @@ jobs:
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
-      - notify_slack
+      - notify_fail_slack
 
 workflows:
   version: 2.1
