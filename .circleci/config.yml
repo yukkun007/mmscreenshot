@@ -13,7 +13,7 @@ orbs:
   slack: circleci/slack@4.1.2
 
 commands:
-  nofity_slack:
+  notify_slack:
     steps:
       - slack/notify:
           event: always
