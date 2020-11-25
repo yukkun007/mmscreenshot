@@ -13,6 +13,41 @@ orbs:
   slack: circleci/slack@4.1.2
 
 commands:
+  nofity_slack:
+    steps:
+      - slack/notify:
+          event: always
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n"
+                  }
+                },
+                {
+                  "type": "divider"
+                },
+                {
+                  "type": "actions",
+                  "elements": [
+                    {
+                      "type": "button",
+                      "text": {
+                        "type": "plain_text",
+                        "text": "View Job",
+                        "emoji": true
+                      },
+                      "value": "click_me_123",
+                      "url": "${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
+
   restore:
     steps:
       - when:
@@ -69,7 +104,7 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
-                  cp .fonts/* ${CIRCLE_WORKING_DIRECTORY}
+                  ls -al ${CIRCLE_WORKING_DIRECTORY}
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
@@ -88,7 +123,7 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
-                  cp .fonts/* ${CIRCLE_WORKING_DIRECTORY}
+                  ls -al ${CIRCLE_WORKING_DIRECTORY}
             - save
 
   lint:
@@ -100,12 +135,13 @@ jobs:
           name: Lint
           command: |
             pipenv run lint
-      - slack/notify:
-          event: always
-          template: basic_fail_1
-      - slack/notify:
-          event: pass
-          template: success_tagged_deploy_1
+      - notify_slack
+      # - slack/notify:
+      #     event: always
+      #     template: basic_fail_1
+      # - slack/notify:
+      #     event: pass
+      #     template: success_tagged_deploy_1
 
   test:
     executor: my-executor
