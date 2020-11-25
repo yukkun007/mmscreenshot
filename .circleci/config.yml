@@ -16,8 +16,7 @@ commands:
   notify_slack:
     steps:
       - slack/notify:
-          event: always
-      #     event: pass
+          event: fail
           custom: |
             {
               "blocks": [
@@ -96,16 +95,10 @@ jobs:
                 command: |
                   python --version
                   sudo pip install pipenv
-                  pipenv run pip install --upgrade setuptools
-                  pipenv run pip install --upgrade pip
                   pipenv install --dev
                   pipenv lock
                   pipenv run pip install -e .
                   pipenv run pip list installed
-                  sudo apt install -y fonts-ipafont
-                  fc-cache -fv
-                  ls -al /home/circleci/CircleCIWork
-                  echo ${HOME}
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
@@ -119,15 +112,10 @@ jobs:
                 command: |
                   python --version
                   sudo pip install pipenv
-                  pipenv run pip install --upgrade setuptools
-                  pipenv run pip install --upgrade pip
                   pipenv sync --dev
                   pipenv run pip install -e .
                   pipenv run pip list installed
-                  sudo apt install -y fonts-ipafont
-                  fc-cache -fv
-                  ls -al /home/circleci/CircleCIWork
-                  echo ${HOME}
+                  pipenv run which pytest
             - save
 
   lint:
@@ -151,7 +139,6 @@ jobs:
           command: |
             pipenv run ut
             bash <(curl -s https://codecov.io/bash)
-            pipenv run mmscreenshot --help
       - store_artifacts:
           path: ./screenshot.png
       - notify_slack
