@@ -115,10 +115,8 @@ jobs:
                   pipenv sync --dev
                   pipenv run pip install -e .
                   pipenv run pip list installed
-                  pipenv run which pytest
                   pwd
-                  mkdir /home/circleci/.fonts
-                  cp /home/circleci/CircleCIWork/.fonts/* /home/circleci/.fonts/
+                  whoami
             - save
 
   lint:
