@@ -69,6 +69,7 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
+                  cp .fonts/* ${CIRCLE_WORKING_DIRECTORY}
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
@@ -87,6 +88,7 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
+                  cp .fonts/* ${CIRCLE_WORKING_DIRECTORY}
             - save
 
   lint:
@@ -126,7 +128,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n{CIRCLE_BRANCH}"
+                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n"
                   }
                 },
                 {
