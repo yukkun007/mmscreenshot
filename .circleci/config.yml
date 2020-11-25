@@ -30,23 +30,19 @@ commands:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Repogitory*:\\n${CIRCLE_PROJECT_REPONAME}"
+                      "text": "*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch*:\\n${CIRCLE_BRANCH}"
+                      "text": "*Branch*:\n${CIRCLE_BRANCH}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commiter*:\\n${CIRCLE_USERNAME}"
+                      "text": "*Commiter*:\n${CIRCLE_USERNAME}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*SHA*:\\n${CIRCLE_SHA1}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
+                      "text": "*SHA*:\n${CIRCLE_SHA1}"
                     }
                   ],
                   "accessory": {
@@ -88,23 +84,19 @@ commands:
                   "fields": [
                     {
                       "type": "mrkdwn",
-                      "text": "*Repogitory*:\\n${CIRCLE_PROJECT_REPONAME}"
+                      "text": "*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Branch*:\\n${CIRCLE_BRANCH}"
+                      "text": "*Branch*:\n${CIRCLE_BRANCH}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*Commiter*:\\n${CIRCLE_USERNAME}"
+                      "text": "*Commiter*:\n${CIRCLE_USERNAME}"
                     },
                     {
                       "type": "mrkdwn",
-                      "text": "*SHA*:\\n${CIRCLE_SHA1}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Mentions*:\\n${SLACK_PARAM_MENTIONS}"
+                      "text": "*SHA*:\n${CIRCLE_SHA1}"
                     }
                   ],
                   "accessory": {
@@ -204,6 +196,7 @@ jobs:
                   pwd
                   whoami
             - save
+            - notify_success_slack
             - notify_fail_slack
 
   lint:
