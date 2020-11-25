@@ -16,8 +16,7 @@ commands:
   notify_success_slack:
     steps:
       - slack/notify:
-          event: always
-          # event: pass
+          event: pass
           custom: |
             {
               "blocks": [
@@ -71,8 +70,7 @@ commands:
   notify_fail_slack:
     steps:
       - slack/notify:
-          event: always
-          # event: fail
+          event: fail
           custom: |
             {
               "blocks": [
@@ -197,7 +195,6 @@ jobs:
                   pwd
                   whoami
             - save
-            - notify_success_slack
             - notify_fail_slack
 
   lint:
