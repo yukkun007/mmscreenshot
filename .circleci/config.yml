@@ -97,7 +97,6 @@ jobs:
                   python --version
                   sudo pip install pipenv
                   pipenv run pip install --upgrade setuptools
-                  pipenv run pip install --upgrade distribute
                   pipenv run pip install --upgrade pip
                   pipenv install --dev
                   pipenv lock
@@ -121,7 +120,6 @@ jobs:
                   python --version
                   sudo pip install pipenv
                   pipenv run pip install --upgrade setuptools
-                  pipenv run pip install --upgrade distribute
                   pipenv run pip install --upgrade pip
                   pipenv sync --dev
                   pipenv run pip install -e .
