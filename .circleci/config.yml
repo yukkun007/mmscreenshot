@@ -16,7 +16,8 @@ commands:
   notify_success_slack:
     steps:
       - slack/notify:
-          event: pass
+          event: always
+          # event: pass
           custom: |
             {
               "blocks": [
