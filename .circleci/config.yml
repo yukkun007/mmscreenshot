@@ -62,7 +62,7 @@ commands:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "View Job",
+                        "text": "View Job"
                       },
                       "url": "${CIRCLE_BUILD_URL}"
                     }
