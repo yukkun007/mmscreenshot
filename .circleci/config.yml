@@ -17,6 +17,7 @@ commands:
     steps:
       - slack/notify:
           event: always
+      #     event: pass
           custom: |
             {
               "blocks": [
@@ -24,7 +25,7 @@ commands:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n"
+                    "text": ":circleci-fail: 「*${CIRCLE_JOB}*」ジョブが失敗しました。\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n"
                   }
                 },
                 {
@@ -138,12 +139,6 @@ jobs:
           command: |
             pipenv run lint
       - notify_slack
-      # - slack/notify:
-      #     event: always
-      #     template: basic_fail_1
-      # - slack/notify:
-      #     event: pass
-      #     template: success_tagged_deploy_1
 
   test:
     executor: my-executor
@@ -157,39 +152,7 @@ jobs:
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
-      - slack/notify:
-          event: always
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n${CIRCLE_BRANCH}*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n"
-                  }
-                },
-                {
-                  "type": "divider"
-                },
-                {
-                  "type": "actions",
-                  "elements": [
-                    {
-                      "type": "button",
-                      "text": {
-                        "type": "plain_text",
-                        "text": "View Job",
-                        "emoji": true
-                      },
-                      "value": "click_me_123",
-                      "url": "${CIRCLE_BUILD_URL}"
-                    }
-                  ]
-                }
-              ]
-            }
-
+      - notify_slack
 
 workflows:
   version: 2.1
