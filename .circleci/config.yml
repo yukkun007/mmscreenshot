@@ -126,7 +126,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Hello, Assistant ${CIRCLE_BRANCH} to the Regional Manager Dwight! *Michael Scott* wants\n\n *Please select a restaurant:*"
+                    "text": "Your job *${CIRCLE_JOB}* has failed\n\n*Commiter*:\n${CIRCLE_USERNAME}\n*SHA*:\n${CIRCLE_SHA1}\n*Repogitory*:\n${CIRCLE_PROJECT_REPONAME}\n*Branch*:\n{CIRCLE_BRANCH}"
                   }
                 },
                 {
@@ -139,16 +139,17 @@ jobs:
                       "type": "button",
                       "text": {
                         "type": "plain_text",
-                        "text": "Ler Ros",
+                        "text": "View Job",
                         "emoji": true
                       },
                       "value": "click_me_123",
-                      "url": "https://google.com"
+                      "url": "${CIRCLE_BUILD_URL}"
                     }
                   ]
                 }
               ]
             }
+
 
 workflows:
   version: 2.1
