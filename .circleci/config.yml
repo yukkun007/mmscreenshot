@@ -104,7 +104,8 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
-                  ls -al ${CIRCLE_WORKING_DIRECTORY}
+                  ls -al /home/circleci/CircleCIWork
+                  echo ${HOME}
             - save
             - store_artifacts:
                 path: ./Pipfile.lock
@@ -123,7 +124,8 @@ jobs:
                   pipenv run pip list installed
                   sudo apt install -y fonts-ipafont
                   fc-cache -fv
-                  ls -al ${CIRCLE_WORKING_DIRECTORY}
+                  ls -al /home/circleci/CircleCIWork
+                  echo ${HOME}
             - save
 
   lint:
