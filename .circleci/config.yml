@@ -235,7 +235,8 @@ workflows:
   version: 2.1
   build-and-test-workflow:
     jobs:
-      - setup
+      - setup:
+          context: ci
       - lint:
           requires:
             - setup
