@@ -147,6 +147,7 @@ jobs:
           command: |
             pipenv run ut
             bash <(curl -s https://codecov.io/bash)
+            pipenv run start
       - store_artifacts:
           path: ./screenshot.png
       - notify_slack
