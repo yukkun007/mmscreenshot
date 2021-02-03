@@ -5,82 +5,19 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
 [![Requirements Status](https://requires.io/github/yukkun007/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/yukkun007/mmscreenshot/requirements/?branch=master)
 
-指定したサイトのスクリーンショットを取得するライブラリ。
+指定したサイトのスクリーンショットやテキスト要素を取得するライブラリ。
 
 ## Requirements
 
-下記が必須。`serverless-chrome`を使う場合はバージョンの組合せに注意(後述)。
+- 動作に必要
+  - Chrome(headless-chromium)
+  - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+- 開発環境構築に必要
+  - pipenv
 
-- Chrome(headless-chromium)
-- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+※ Lambdaで`serverless-chrome`を使う場合は[バージョンの組合せ](#serverless-chromeについて)に注意。
 
-### [What is serverless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)
-
-ChromeをAWS Lambdaで動作させる場合に利用できる。
-
-- 最新のバージョンは1.0.0-55だが動かない
-- 以下の組み合わで動確([参照](https://github.com/adieuadieu/serverless-chrome/issues/133))
-  - [severless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)==1.0.0-37 (64.0.3282.167 stable channel)
-  - chromedriver==2.37
-  - selenium==3.141.0
-
-### How to setup requirements
-
-#### Downloads
-
-##### serverless-chrome
-
-- <https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-37/stable-headless-chromium-amazonlinux-2017-03.zip>
-
-##### Chromedriver
-
-- <http://chromedriver.storage.googleapis.com/index.html?path=2.37/>
-
-#### Setup for AWS Lambda
-
-- `serverless-chrome`と`chromedriver`をLambda Layerにあげて使う([参照](https://hacknote.jp/archives/49974/))
-- フォントがない場合文字化けする
-  - Lambdaにデプロイするパッケージのルートに`.fonts`ディレクトリを作成してフォントを格納する([参照](https://qiita.com/havveFn/items/bb8cd0d937c671100200))
-  - CircleCI等でも文字化けするが、同様に`~/.fonts`に置くか[インストール](https://worklog.be/archives/3422#Google_Noto_Fonts)すれば良い
-
-#### Setup for Local (Mac)
-
-下記の通り。詳細は`script/install.sh`を参照。
-
-- `Google Chrome Canary`をインストール
-
-```sh
-brew install Caskroom/versions/google-chrome-canary
-/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --version
-```
-
-- `chromedriver`をダウンロードして配置
-
-```sh
-/usr/local/bin/chromedriver -v
-```
-
-#### Environment valiables
-
-`Chrome`および`ChromeDriver`のパスを環境変数として指定する。プロジェクトディレクトリ直下に、`.env`ファイルを配置して下記のように記載すれば良い(`.env_sample`からコピーすると楽)。任意のファイルに記載して指定も可能。
-
-##### Local
-
-```env
-CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
-```
-
-##### AWS Lambda Layer
-
-Lambda Layerでは/opt/に配置される。
-
-```env
-CHROME_BINARY_LOCATION='/opt/headless/python/bin/headless-chromium'
-CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
-```
-
-## How to use
+## Usage
 
 ### Install
 
@@ -88,7 +25,12 @@ CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
 pip install git+https://github.com/yukkun007/mmscreenshot
 ```
 
+- [chromeとchromedriverをインストール](#chrome-and-chromedriver)
+- [`.env`ファイルを配置](#env)
+
 ### Run with command line
+
+コマンドラインからの呼び出し方法。
 
 ```sh
 mmscreenshot --help
@@ -98,9 +40,11 @@ mmscreenshot --help
 mmscreenshot "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
 ```
 
-### Use module
+### Use library
 
-スクリーンショットを取得。
+ライブラリの使用方法。
+
+#### スクリーンショット取得
 
 ```python
 from mmscreenshot import screenshot
@@ -111,7 +55,7 @@ screenshot(
 )
 ```
 
-テキスト要素を取得。
+#### テキスト要素取得
 
 ```python
 from mmscreenshot import get_text
@@ -137,28 +81,65 @@ pip uninstall mmscreenshot
 
 ## Local Development
 
-### How to setup
+### Setup requirements
 
-`pipenv`を使うので無ければ入れること。
+#### Chrome and chromedriver
+
+下記はMacでの例。詳細は`script/install.sh`を参照。
+
+- `Google Chrome Canary`をインストール
 
 ```bash
-export PIPENV_VENV_IN_PROJECT=true  # 仮想環境はprojectディレクトリ配下に作成
-pip install pipenv # pipenvを導入
+brew install Caskroom/versions/google-chrome-canary
+/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --version
 ```
+
+- `chromedriver`を[ダウンロード](http://chromedriver.storage.googleapis.com/index.html?path=2.37/)して配置
+
+```sh
+/usr/local/bin/chromedriver -v
+```
+
+#### pipenv
+
+`pipenv`を使うので無ければ入れる。
+
+```bash
+pip install pipenv # pipenvを導入
+export PIPENV_VENV_IN_PROJECT=true  # 仮想環境をprojectディレクトリ配下に作成
+```
+
+### Setup
+
+下記の通り。
 
 ```bash
 git clone git@github.com:yukkun007/mmscreenshot.git
 cd mmscreenshot
 pipenv sync --dev # "sync"でPipfile.lockと一致した環境になる
-pipenv shell
+pipenv shell # 仮想環境に入る, pipenv run pip install -e . でも可
 pip install -e . # mmscreenshot自体をinstall
 ```
 
-※ `pipenv sync`では「再ロック」(PipfileやPipfile.lockの内容更新)はされない
+- `pipenv install`は依存関係の解決がすごく遅いので`sync`を使う
+- `pipenv sync`では「再ロック」(PipfileやPipfile.lockの内容更新)はされない
+- 参考: [Pipfile.lockで固定された依存関係を再現するならpipenv syncコマンドを使おう | Developers.IO](https://dev.classmethod.jp/articles/pipenv-sync-is-useful/)
+
+#### .env
+
+プロジェクトディレクトリ直下に`.env`ファイルを配置する。
+ローカル環境の`Chrome`および`ChromeDriver`のパスを指定。
+
+下記はMac環境のサンプル(`.env_sample`)。
+
+```env
+CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
+```
 
 ### Run
 
-`.env`の準備を忘れずに。Yahoo天気予報がscreenshot.pngに保存される。
+Yahoo天気予報がscreenshot.pngに保存される。
 
 ```sh
 pipenv run start
@@ -184,7 +165,44 @@ pipenv run ut
 pipenv run doc
 ```
 
-### How to Update Dependency Modules
+### Library management
+
+ローカル環境で、このライブラリを操作する方法。
+
+#### Install library
+
+```sh
+pip install -e .
+```
+
+- [Setup](#setup)で実施済み
+- `-e`をつけると編集可能モードでインストールされるので便利
+  - ソース編集の都度反映される
+  - つけないと、都度[Upgrade library](#upgrade-library)が必要
+
+#### Upgrade library
+
+`-e`付きでインストールしたなら不要。
+
+```sh
+pip install --upgrade .
+```
+
+または
+
+```sh
+pip install -U .
+```
+
+#### Uninstall library
+
+```sh
+pip uninstall mmscreenshot
+```
+
+### Update dependency modules
+
+requires-ioを使っている。pull reqが来るので下記手順で対応。
 
 ```sh
 git checkout requires-io-master
@@ -197,32 +215,33 @@ git push origin requires-io-master
 # merge branch "requires-io-master" at github web ui
 ```
 
-### How to use module for local development
+## AWS Lambda で使う場合
 
-#### Install package
+### 注意点
 
-`-e`をつけると編集可能モードでインストールされるので便利。ソース編集の都度反映される。つけないと、都度`upgrade package`が必要になる。
+- `serverless-chrome`と`chromedriver`をLambda Layerに上げる必要あり([参照](https://hacknote.jp/archives/49974/))
+- フォントがないと文字化けする
+  - デプロイパッケージのルートに`.fonts`ディレクトリを作成してフォントを格納する([参照](https://qiita.com/havveFn/items/bb8cd0d937c671100200))
+  - なお、CircleCI等でも同様だが、同じく`~/.fonts`に置くか[インストール](https://worklog.be/archives/3422#Google_Noto_Fonts)すれば良い
 
-```sh
-pip install -e .
-```
+### serverless-chromeについて
 
-#### Upgrade package (-e付きでInstallしたなら不要)
+Chrome を AWS Lambda で動作させる場合に利用できる。
 
-```sh
-pip install --upgrade .
-```
+- 最新のバージョンは1.0.0-55だが動かない
+- 以下の組み合わで動確している([参考](https://github.com/adieuadieu/serverless-chrome/issues/133))
+  - [severless-chrome](https://github.com/adieuadieu/serverless-chrome/releases)==[1.0.0-37](https://github.com/adieuadieu/serverless-chrome/releases/download/v1.0.0-37/stable-headless-chromium-amazonlinux-2017-03.zip) (64.0.3282.167 stable channel)
+  - [chromedriver==2.37](http://chromedriver.storage.googleapis.com/index.html?path=2.37/)
+  - selenium==3.141.0
 
-or
+### 環境変数
 
-```sh
-pip install -U .
-```
+Lambda Layerではchrome等が/opt/に配置される。
+`.env`は下記のようにする。
 
-#### Uninstall package
-
-```sh
-pip uninstall mmscreenshot
+```env
+CHROME_BINARY_LOCATION='/opt/headless/python/bin/headless-chromium'
+CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
 ```
 
 ## 配布物関連
