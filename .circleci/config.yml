@@ -183,7 +183,7 @@ jobs:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            # - restore
+            - restore
             - run:
                 name: Install
                 command: |
@@ -198,14 +198,14 @@ jobs:
                   test=$(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
                   echo $test
                   find . -name moz-screenshot*
-            # - save
+            - save
             - notify_fail_slack
 
   lint:
     executor: my-executor
     steps:
       - checkout
-      # - restore
+      - restore
       - run:
           name: Lint
           command: |
@@ -217,7 +217,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      # - restore
+      - restore
       - run:
           name: Test
           command: |
