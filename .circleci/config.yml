@@ -190,7 +190,7 @@ jobs:
                   pwd
                   whoami
                   python --version
-                  poetry config virtualenvs.path ~/CircleCIWork/.venv/
+                  poetry config virtualenvs.in-project true
                   poetry install
                   ls -al ~/CircleCIWork/
                   ls -al ~/CircleCIWork/.venv/
@@ -205,6 +205,7 @@ jobs:
       - run:
           name: Lint
           command: |
+            poetry shell
             meke lint
       - notify_fail_slack
 
@@ -216,6 +217,7 @@ jobs:
       - run:
           name: Test
           command: |
+            poetry shell
             make ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
