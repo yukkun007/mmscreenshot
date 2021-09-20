@@ -195,6 +195,8 @@ jobs:
                   poetry config --list
                   ls -al ~/CircleCIWork/
                   find ~/CircleCIWork -name moz-screenshot*
+                  test=$(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
+                  echo $test
                   find . -name moz-screenshot*
             # - save
             - notify_fail_slack
