@@ -151,18 +151,11 @@ make doc
 
 ### Update dependency modules
 
-requires-ioを使っている。pull reqが来るので下記手順で対応。
+dependabot (GitHub公式) がプルリクを挙げてくるので確認してマージする。
 
-```sh
-git checkout requires-io-master
-# remove Pipfile.lock
-pipenv install --dev
-# run and test
-git add Pipfile.lock
-git commit -m "update modules"
-git push origin requires-io-master
-# merge branch "requires-io-master" at github web ui
-```
+- 最低でもCircleCIが通っているかは確認
+- CircleCIでは、最新の依存モジュールでtestするため`poetry update`してからtestしている
+- dependabotは`pyproject.toml`と`poetry.lock`を更新してくれる
 
 ## AWS Lambda で使う場合
 
