@@ -9,7 +9,7 @@ executors:
     working_directory: ~/CircleCIWork
 
 orbs:
-  slack: circleci/slack@4.1.2
+  slack: circleci/slack@4.4.4
 
 commands:
   notify_success_slack:
@@ -191,6 +191,7 @@ jobs:
                   poetry config virtualenvs.path ~/CircleCIWork/
                   poetry install
             - save
+            - notify_success_slack
             - notify_fail_slack
 
   lint:
