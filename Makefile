@@ -5,7 +5,7 @@ all: lint ut
 lint: flake8 flake8_test black
 
 black:
-	black .
+	black ./src ./tests
 
 flake8:
 	flake8 --max-line-length=100 --ignore=E203,W503 ./src

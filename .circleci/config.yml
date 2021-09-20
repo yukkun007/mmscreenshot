@@ -4,7 +4,6 @@ executors:
     docker:
       - image: circleci/python:3.8.1-browsers
         environment:
-          # PIPENV_VENV_IN_PROJECT: true
           CHROME_BINARY_LOCATION: /usr/bin/google-chrome
           CHROME_DRIVER_LOCATION: /usr/local/bin/chromedriver
     working_directory: ~/CircleCIWork
@@ -168,15 +167,14 @@ jobs:
             - run:
                 name: Install for Requires.io
                 command: |
+                  pwd
+                  whoami
                   python --version
-                  sudo pip install pipenv
-                  pipenv install --dev
-                  pipenv lock
-                  pipenv run pip install -e .
-                  pipenv run pip list installed
+                  poetry config virtualenvs.path ~/CircleCIWork/
+                  poetry update
             - save
             - store_artifacts:
-                path: ./Pipfile.lock
+                path: ./poetry.lock
             - notify_success_slack
             - notify_fail_slack
       - unless:
