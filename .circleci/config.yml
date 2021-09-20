@@ -175,7 +175,6 @@ jobs:
             - save
             - store_artifacts:
                 path: ./poetry.lock
-            - notify_success_slack
             - notify_fail_slack
       - unless:
           condition:
@@ -191,7 +190,6 @@ jobs:
                   poetry config virtualenvs.path ~/CircleCIWork/
                   poetry install
             - save
-            - notify_success_slack
             - notify_fail_slack
 
   lint:
@@ -219,6 +217,7 @@ jobs:
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png
+      - notify_success_slack
       - notify_fail_slack
 
 workflows:
@@ -233,5 +232,5 @@ workflows:
           context: ci
       - test:
           requires:
-            - setup
+            - lint
           context: ci
