@@ -190,8 +190,8 @@ jobs:
                   pwd
                   whoami
                   python --version
-                  poetry config virtualenvs.path ~/CircleCIWork/
                   poetry install
+                  poetry config --list
                   ls -al ~/CircleCIWork/
                   ls -al ~/CircleCIWork/.venv/
             - save
@@ -205,7 +205,7 @@ jobs:
       - run:
           name: Lint
           command: |
-            source $(find . -name moz-screenshot*)/bin/activate
+            source ~/CircleCIWork/.venv/bin/activate
             meke lint
       - notify_fail_slack
 
