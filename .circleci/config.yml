@@ -127,13 +127,13 @@ commands:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
-                key: moz-screenshot-{{ .Branch }}-{{ checksum "pyproject.toml" }}
+                key: moz-screenshot-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "pyproject.toml" }}
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
-                key: moz-screenshot-{{ .Branch }}-{{ checksum "poetry.lock" }}
+                key: moz-screenshot-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "poetry.lock" }}
 
   save:
     steps:
@@ -143,16 +143,16 @@ commands:
           steps:
             - save_cache:
                 paths:
-                  - "~/CircleCIWork/.venv"
-                key: moz-screenshot-{{ .Branch }}-{{ checksum "pyproject.toml" }}
+                  - "."
+                key: moz-screenshot-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "pyproject.toml" }}
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - save_cache:
                 paths:
-                  - "~/CircleCIWork/.venv"
-                key: moz-screenshot-{{ .Branch }}-{{ checksum "poetry.lock" }}
+                  - "."
+                key: moz-screenshot-{{ .Environment.CACHE_VERSION }}-{{ .Branch }}-{{ checksum "poetry.lock" }}
 
 jobs:
 
@@ -183,14 +183,14 @@ jobs:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            # - restore
+            - restore
             - run:
                 name: Install
                 command: |
                   pwd
                   whoami
                   python --version
-                  poetry config virtualenvs.path ~/CircleCIWork/.venv/
+                  poetry config virtualenvs.path ~/CircleCIWork/
                   poetry install
                   poetry config --list
                   ls -al ~/CircleCIWork/
@@ -200,15 +200,14 @@ jobs:
                   test2=$(find ~/CircleCIWork -name moz-screenshot*)/
                   echo $test2
                   ls -al $test2
-                  find . -name moz-screenshot*
-            # - save
+            - save
             - notify_fail_slack
 
   lint:
     executor: my-executor
     steps:
       - checkout
-      # - restore
+      - restore
       - run:
           name: Lint
           command: |
