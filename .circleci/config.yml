@@ -127,13 +127,13 @@ commands:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
-                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+                key: moz-screenshot-{{ .Branch }}-{{ checksum "pyproject.toml" }}
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
             - restore_cache:
-                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                key: moz-screenshot-{{ .Branch }}-{{ checksum "poetry.lock" }}
 
   save:
     steps:
@@ -144,7 +144,7 @@ commands:
             - save_cache:
                 paths:
                   - ".venv"
-                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile" }}
+                key: moz-screenshot-{{ .Branch }}-{{ checksum "pyproject.toml" }}
       - unless:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
@@ -152,7 +152,7 @@ commands:
             - save_cache:
                 paths:
                   - ".venv"
-                key: mmscreenshot-v11-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                key: moz-screenshot-{{ .Branch }}-{{ checksum "poetry.lock" }}
 
 jobs:
 
@@ -187,13 +187,13 @@ jobs:
             - run:
                 name: Install
                 command: |
-                  python --version
-                  sudo pip install pipenv
-                  pipenv sync --dev
-                  pipenv run pip install -e .
-                  pipenv run pip list installed
                   pwd
                   whoami
+                  python --version
+                  poetry config virtualenvs.path ~/CircleCIWork/.venv/
+                  poetry install
+                  ls -al ~/CircleCIWork/
+                  ls -al ~/CircleCIWork/.venv/
             - save
             - notify_fail_slack
 
@@ -205,7 +205,7 @@ jobs:
       - run:
           name: Lint
           command: |
-            pipenv run lint
+            meke lint
       - notify_fail_slack
 
   test:
@@ -216,7 +216,7 @@ jobs:
       - run:
           name: Test
           command: |
-            pipenv run ut
+            make ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
           path: ./screenshot.png

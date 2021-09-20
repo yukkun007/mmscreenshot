@@ -1,10 +1,13 @@
 import pytest
-from mmscreenshot.chrome_driver import ChromeDriver
+from moz_screenshot.env import load_env
+from moz_screenshot.chrome_driver import ChromeDriver
 
 
 class TestChromeDriver:
     @pytest.fixture()
     def chrome_driver_1(self) -> ChromeDriver:
+        if load_env(".env") is False:
+            print("Failed to load dotenv file.")
         return ChromeDriver()
 
     @pytest.mark.slow

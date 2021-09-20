@@ -1,4 +1,4 @@
-from mmscreenshot.core import screenshot, get_text
+from moz_screenshot import screenshot, get_text
 
 
 class TestCore:

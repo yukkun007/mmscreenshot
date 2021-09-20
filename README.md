@@ -1,53 +1,69 @@
-# mmscreenshot
+# moz-screenshot
 
-[![yukkun007](https://img.shields.io/circleci/build/github/yukkun007/mmscreenshot)](https://circleci.com/gh/yukkun007/mmscreenshot)
-[![codecov](https://codecov.io/gh/yukkun007/mmscreenshot/branch/master/graph/badge.svg)](https://codecov.io/gh/yukkun007/mmscreenshot)
-[![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/yukkun007/mmscreenshot/maintainability)
-[![Requirements Status](https://requires.io/github/yukkun007/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/yukkun007/mmscreenshot/requirements/?branch=master)
+[![mozkzki](https://img.shields.io/circleci/build/github/mozkzki/mmscreenshot)](https://circleci.com/gh/mozkzki/mmscreenshot)
+[![codecov](https://codecov.io/gh/mozkzki/mmscreenshot/branch/master/graph/badge.svg?token=BRB5vsPkO2)](https://codecov.io/gh/mozkzki/mmscreenshot)
+[![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/mozkzki/mmscreenshot/maintainability)
+[![Requirements Status](https://requires.io/github/mozkzki/mmscreenshot/requirements.svg?branch=master)](https://requires.io/github/mozkzki/mmscreenshot/requirements/?branch=master)
 
 指定したサイトのスクリーンショットやテキスト要素を取得するライブラリ。
 
+## Function
+
+- screenshot
+- get_text
+
 ## Requirements
 
-- 動作に必要
-  - Chrome(headless-chromium)
-  - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
-- 開発環境構築に必要
-  - pipenv
+- Chrome (headless-chromiumでもよい)
+  - Lambdaで`serverless-chrome`を使う場合は[バージョンの組合せ](#serverless-chromeについて)に注意
+  - Macに`Google Chrome Canary`を`homebrew`でインストール
 
-※ Lambdaで`serverless-chrome`を使う場合は[バージョンの組合せ](#serverless-chromeについて)に注意。
+```sh
+# install
+brew install Caskroom/versions/google-chrome-canary
+# install 確認
+/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --version
+```
+
+- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads)
+  - [ダウンロード](http://chromedriver.storage.googleapis.com/index.html?path=2.37/)して配置
+
+```sh
+# install 確認
+/usr/local/bin/chromedriver -v
+```
+
+※ `scripts/install.sh`も参照
 
 ## Usage
 
-### Install
+Environmental variables
 
-```sh
-pip install git+https://github.com/yukkun007/mmscreenshot
+`.env`ファイルに書いてproject rootに配置。`.env_sample`をコピーすると楽。
+
+```txt
+CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
 ```
 
-- [chromeとchromedriverをインストール](#chrome-and-chromedriver)
-- [`.env`ファイルを配置](#env)
-
-### Run with command line
-
-コマンドラインからの呼び出し方法。
+Install
 
 ```sh
-mmscreenshot --help
+pip install git+https://github.com/mozkzki/moz-screenshot
+# upgrade
+pip install --upgrade git+https://github.com/mozkzki/moz-screenshot
+# uninstall
+pip uninstall moz-screenshot
 ```
 
-```sh
-mmscreenshot "https://weather.yahoo.co.jp/weather/jp/13/4410.html" "//div[@class='forecastCity']/table/tbody/tr/td/div"
-```
+Coding
 
-### Use library
+### スクリーンショット取得
 
-ライブラリの使用方法。
-
-#### スクリーンショット取得
+Yahoo天気予報がscreenshot.pngに保存される。
 
 ```python
-from mmscreenshot import screenshot
+from moz_screenshot import screenshot
 screenshot(
     "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
     "//div[@class='forecastCity']/table/tbody/tr/td/div",
@@ -55,149 +71,83 @@ screenshot(
 )
 ```
 
-#### テキスト要素取得
+### テキスト要素取得
 
 ```python
-from mmscreenshot import get_text
+from moz_screenshot import get_text
 text = get_text(
     "https://weather.yahoo.co.jp/weather/jp/13/4410.html",
     "//div[@class='forecastCity']/table/tbody/tr/td/div/table/tbody/tr[2]/td[3]",
-    dotenv_path="/pat/to/.env"
 )
 print(text)
 ```
 
-### Upgrade
+## Develop
+
+base project: [mozkzki/moz-sample](https://github.com/mozkzki/moz-sample)
+
+### Prepare
 
 ```sh
-pip install --upgrade git+https://github.com/yukkun007/mmscreenshot
+poetry install
+poetry shell
 ```
 
-### Uninstall
+### Run (Example)
 
 ```sh
-pip uninstall mmscreenshot
+python ./examples/example.py
+# or
+make start
 ```
 
-## Local Development
+### Unit Test
 
-### Setup requirements
-
-#### Chrome and chromedriver
-
-下記はMacでの例。詳細は`script/install.sh`を参照。
-
-- `Google Chrome Canary`をインストール
-
-```bash
-brew install Caskroom/versions/google-chrome-canary
-/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary --version
-```
-
-- `chromedriver`を[ダウンロード](http://chromedriver.storage.googleapis.com/index.html?path=2.37/)して配置
+test all.
 
 ```sh
-/usr/local/bin/chromedriver -v
+pytest
+pytest -v # verbose
+pytest -s # show standard output (same --capture=no)
+pytest -ra # show summary (exclude passed test)
+pytest -rA # show summary (include passed test)
 ```
 
-#### pipenv
-
-`pipenv`を使うので無ければ入れる。
-
-```bash
-pip install pipenv # pipenvを導入
-export PIPENV_VENV_IN_PROJECT=true  # 仮想環境をprojectディレクトリ配下に作成
-```
-
-### Setup
-
-下記の通り。
-
-```bash
-git clone git@github.com:yukkun007/mmscreenshot.git
-cd mmscreenshot
-pipenv sync --dev # "sync"でPipfile.lockと一致した環境になる
-pipenv shell # 仮想環境に入る, pipenv run pip install -e . でも可
-pip install -e . # mmscreenshot自体をinstall
-```
-
-- `pipenv install`は依存関係の解決がすごく遅いので`sync`を使う
-- `pipenv sync`では「再ロック」(PipfileやPipfile.lockの内容更新)はされない
-- 参考: [Pipfile.lockで固定された依存関係を再現するならpipenv syncコマンドを使おう | Developers.IO](https://dev.classmethod.jp/articles/pipenv-sync-is-useful/)
-
-#### .env
-
-プロジェクトディレクトリ直下に`.env`ファイルを配置する。
-ローカル環境の`Chrome`および`ChromeDriver`のパスを指定。
-
-下記はMac環境のサンプル(`.env_sample`)。
-
-```env
-CHROME_BINARY_LOCATION='/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
-CHROME_DRIVER_LOCATION='/usr/local/bin/chromedriver'
-```
-
-### Run
-
-Yahoo天気予報がscreenshot.pngに保存される。
+with filter.
 
 ```sh
-pipenv run start
+pytest -k app
+pytest -k test_app.py
+pytest -k my
+```
+
+specified marker.
+
+```sh
+pytest -m 'slow'
+pytest -m 'not slow'
+```
+
+make coverage report.
+
+```sh
+pytest -v --capture=no --cov-config .coveragerc --cov=src --cov-report=xml --cov-report=term-missing .
+# or
+make ut
 ```
 
 ### Lint
 
 ```sh
-pipenv run lint
-```
-
-### Unit Test
-
-```sh
-pipenv run ut
+flake8 --max-line-length=100 --ignore=E203,W503 ./src
+# or
+make lint
 ```
 
 ### Create API Document (Sphinx)
 
-`docs/_build/html`に出力される。
-
 ```sh
-pipenv run doc
-```
-
-### Library management
-
-ローカル環境で、このライブラリを操作する方法。
-
-#### Install library
-
-```sh
-pip install -e .
-```
-
-- [Setup](#setup)で実施済み
-- `-e`をつけると編集可能モードでインストールされるので便利
-  - ソース編集の都度反映される
-  - つけないと、都度[Upgrade library](#upgrade-library)が必要
-
-#### Upgrade library
-
-`-e`付きでインストールしたなら不要。
-
-```sh
-pip install --upgrade .
-```
-
-または
-
-```sh
-pip install -U .
-```
-
-#### Uninstall library
-
-```sh
-pip uninstall mmscreenshot
+make doc
 ```
 
 ### Update dependency modules
@@ -243,60 +193,3 @@ Lambda Layerではchrome等が/opt/に配置される。
 CHROME_BINARY_LOCATION='/opt/headless/python/bin/headless-chromium'
 CHROME_DRIVER_LOCATION='/opt/headless/python/bin/chromedriver'
 ```
-
-## 配布物関連
-
-<details>
-
-### ソースコード配布物の作成
-
-dist/ 以下に mmscreenshot-0.0.1.tar.gz が生成される。
-
-```sh
-python setup.py sdist
-```
-
-### ソースコード配布物から pip でインストール
-
-```sh
-pip install mmscreenshot-0.0.1-tar.gz
-```
-
-### ビルド済み配布物(wheel 形式)の作成
-
-dist/ 以下に mmscreenshot-0.0.1-py3-none-any.whl が生成される。
-
-```sh
-python setup.py bdist_wheel (wheelパッケージが必要)
-```
-
-### ビルド済み配布物(wheel 形式)から pip でインストール
-
-```sh
-pip install mmscreenshot-0.0.1-py3-none-any.whl
-```
-
-</details>
-
-## 参考
-
-<details>
-
-### パッケージング/開発環境
-
-- <https://techblog.asahi-net.co.jp/entry/2018/06/15/162951>
-- <https://techblog.asahi-net.co.jp/entry/2018/11/19/103455>
-
-### コマンドライン引数のパース
-
-- <https://qiita.com/kzkadc/items/e4fc7bc9c003de1eb6d0>
-
-### 環境変数の定義
-
-- <https://pod.hatenablog.com/entry/2019/04/29/164109>
-
-### TravisCIでファイルを(簡単に)暗号化して使用する
-
-- <https://qiita.com/kmats@github/items/d22fd856883e6c16d7ea>
-
-</details>

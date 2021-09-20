@@ -1,5 +1,5 @@
-from mmscreenshot.env import load_env
-from mmscreenshot.chrome_driver import ChromeDriver
+from moz_screenshot.env import load_env
+from moz_screenshot.chrome_driver import ChromeDriver
 
 
 def _init(dotenv_path: str) -> None:
