@@ -183,7 +183,7 @@ jobs:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - restore
+            # - restore
             - run:
                 name: Install
                 command: |
@@ -195,14 +195,14 @@ jobs:
                   poetry config --list
                   ls -al ~/CircleCIWork/
                   ls -al ~/CircleCIWork/.venv/
-            - save
+            # - save
             - notify_fail_slack
 
   lint:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      # - restore
       - run:
           name: Lint
           command: |
@@ -214,7 +214,7 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      # - restore
       - run:
           name: Test
           command: |
