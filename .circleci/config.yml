@@ -205,7 +205,7 @@ jobs:
       - run:
           name: Lint
           command: |
-            source $(find . -name moz-screenshot*)/bin/activate
+            source $(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
             meke lint
       - notify_fail_slack
 
@@ -217,7 +217,7 @@ jobs:
       - run:
           name: Test
           command: |
-            source $(find . -name moz-screenshot*)/bin/activate
+            source $(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
             make ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
