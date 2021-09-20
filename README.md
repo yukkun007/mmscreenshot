@@ -3,7 +3,6 @@
 [![mozkzki](https://img.shields.io/circleci/build/github/mozkzki/moz-screenshot)](https://circleci.com/gh/mozkzki/moz-screenshot)
 [![codecov](https://codecov.io/gh/mozkzki/moz-screenshot/branch/master/graph/badge.svg?token=BRB5vsPkO2)](https://codecov.io/gh/mozkzki/moz-screenshot)
 [![Maintainability](https://api.codeclimate.com/v1/badges/df50bbce59225073a577/maintainability)](https://codeclimate.com/github/mozkzki/moz-screenshot/maintainability)
-[![Requirements Status](https://requires.io/github/mozkzki/moz-screenshot/requirements.svg?branch=master)](https://requires.io/github/mozkzki/moz-screenshot/requirements/?branch=master)
 
 指定したサイトのスクリーンショットやテキスト要素を取得するライブラリ。
 
