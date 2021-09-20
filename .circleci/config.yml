@@ -194,7 +194,6 @@ jobs:
                   poetry install
                   poetry config --list
                   ls -al ~/CircleCIWork/
-                  ls -al ~/CircleCIWork/.venv/
             # - save
             - notify_fail_slack
 
