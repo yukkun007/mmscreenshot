@@ -192,14 +192,6 @@ jobs:
                   python --version
                   poetry config virtualenvs.path ~/CircleCIWork/
                   poetry install
-                  poetry config --list
-                  ls -al ~/CircleCIWork/
-                  find ~/CircleCIWork -name moz-screenshot*
-                  test=$(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
-                  echo $test
-                  test2=$(find ~/CircleCIWork -name moz-screenshot*)/
-                  echo $test2
-                  ls -al $test2
             - save
             - notify_fail_slack
 
@@ -212,7 +204,7 @@ jobs:
           name: Lint
           command: |
             source $(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
-            meke lint
+            make lint
       - notify_fail_slack
 
   test:
