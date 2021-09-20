@@ -1,9 +1,9 @@
 # moz-screenshot
 
-[![mozkzki](https://img.shields.io/circleci/build/github/mozkzki/moz_screenshot)](https://circleci.com/gh/mozkzki/moz_screenshot)
-[![codecov](https://codecov.io/gh/mozkzki/moz_screenshot/branch/master/graph/badge.svg?token=BRB5vsPkO2)](https://codecov.io/gh/mozkzki/moz_screenshot)
-[![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/mozkzki/moz_screenshot/maintainability)
-[![Requirements Status](https://requires.io/github/mozkzki/moz_screenshot/requirements.svg?branch=master)](https://requires.io/github/mozkzki/moz_screenshot/requirements/?branch=master)
+[![mozkzki](https://img.shields.io/circleci/build/github/mozkzki/moz-screenshot)](https://circleci.com/gh/mozkzki/moz-screenshot)
+[![codecov](https://codecov.io/gh/mozkzki/moz-screenshot/branch/master/graph/badge.svg?token=BRB5vsPkO2)](https://codecov.io/gh/mozkzki/moz-screenshot)
+[![Maintainability](https://api.codeclimate.com/v1/badges/fa15a1c245473441c7d7/maintainability)](https://codeclimate.com/github/mozkzki/moz-screenshot/maintainability)
+[![Requirements Status](https://requires.io/github/mozkzki/moz-screenshot/requirements.svg?branch=master)](https://requires.io/github/mozkzki/moz-screenshot/requirements/?branch=master)
 
 指定したサイトのスクリーンショットやテキスト要素を取得するライブラリ。
 
