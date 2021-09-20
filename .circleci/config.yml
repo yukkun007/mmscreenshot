@@ -143,7 +143,7 @@ commands:
           steps:
             - save_cache:
                 paths:
-                  - "."
+                  - "~/CircleCIWork/.venv"
                 key: moz-screenshot-{{ .Branch }}-{{ checksum "pyproject.toml" }}
       - unless:
           condition:
@@ -151,7 +151,7 @@ commands:
           steps:
             - save_cache:
                 paths:
-                  - "."
+                  - "~/CircleCIWork/.venv"
                 key: moz-screenshot-{{ .Branch }}-{{ checksum "poetry.lock" }}
 
 jobs:
@@ -183,29 +183,32 @@ jobs:
           condition:
             equal: [ requires-io-master, << pipeline.git.branch >> ]
           steps:
-            - restore
+            # - restore
             - run:
                 name: Install
                 command: |
                   pwd
                   whoami
                   python --version
-                  poetry config virtualenvs.path ~/CircleCIWork/
+                  poetry config virtualenvs.path ~/CircleCIWork/.venv/
                   poetry install
                   poetry config --list
                   ls -al ~/CircleCIWork/
                   find ~/CircleCIWork -name moz-screenshot*
                   test=$(find ~/CircleCIWork -name moz-screenshot*)/bin/activate
                   echo $test
+                  test2=$(find ~/CircleCIWork -name moz-screenshot*)/
+                  echo $test2
+                  ls -al $test2
                   find . -name moz-screenshot*
-            - save
+            # - save
             - notify_fail_slack
 
   lint:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      # - restore
       - run:
           name: Lint
           command: |
