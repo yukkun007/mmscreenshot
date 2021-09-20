@@ -194,6 +194,8 @@ jobs:
                   poetry install
                   poetry config --list
                   ls -al ~/CircleCIWork/
+                  find ~/CircleCIWork -name moz-screenshot*
+                  find . -name moz-screenshot*
             # - save
             - notify_fail_slack
 
