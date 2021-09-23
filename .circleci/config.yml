@@ -241,7 +241,7 @@ jobs:
             make ut
             bash <(curl -s https://codecov.io/bash)
       - store_artifacts:
-          path: ./image.png
+          path: ./screenshot.png
       - notify_success_slack
       - notify_fail_slack
 
