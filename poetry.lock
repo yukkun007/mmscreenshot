@@ -385,7 +385,7 @@ testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtuale
 
 [[package]]
 name = "python-dotenv"
-version = "0.19.1"
+version = "0.19.2"
 description = "Read key-value pairs from a .env file and set them as environment variables"
 category = "main"
 optional = false
@@ -624,7 +624,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "815150e5d8fc3512aaedc18bfe56c89f7d230af984f8ad93961a0d45d4d04675"
+content-hash = "16ebf1383e43331f2055b700a8826f5db2dfaa384cc9c3d6df6719d9a99d7790"
 
 [metadata.files]
 alabaster = [
@@ -936,8 +936,8 @@ pytest-cov = [
     {file = "pytest_cov-3.0.0-py3-none-any.whl", hash = "sha256:578d5d15ac4a25e5f961c938b85a05b09fdaae9deef3bb6de9a6e766622ca7a6"},
 ]
 python-dotenv = [
-    {file = "python-dotenv-0.19.1.tar.gz", hash = "sha256:14f8185cc8d494662683e6914addcb7e95374771e707601dfc70166946b4c4b8"},
-    {file = "python_dotenv-0.19.1-py2.py3-none-any.whl", hash = "sha256:bbd3da593fc49c249397cbfbcc449cf36cb02e75afc8157fcc6a81df6fb7750a"},
+    {file = "python-dotenv-0.19.2.tar.gz", hash = "sha256:a5de49a31e953b45ff2d2fd434bbc2670e8db5273606c1e737cc6b93eff3655f"},
+    {file = "python_dotenv-0.19.2-py2.py3-none-any.whl", hash = "sha256:32b2bdc1873fd3a3c346da1c6db83d0053c3c62f28f1f38516070c4c8971b1d3"},
 ]
 pytz = [
     {file = "pytz-2021.1-py2.py3-none-any.whl", hash = "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"},
