@@ -2,7 +2,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/python:3.7.1-browsers
+      - image: cimg/python:3.11.1-browsers
         environment:
           CHROME_BINARY_LOCATION: /usr/bin/google-chrome
           CHROME_DRIVER_LOCATION: /usr/local/bin/chromedriver
@@ -10,6 +10,8 @@ executors:
 
 orbs:
   slack: circleci/slack@4.4.4
+  browser-tools: circleci/browser-tools@1.4.0
+  codecov: codecov/codecov@3.2.3
 
 commands:
   notify_success_slack:
@@ -187,10 +189,8 @@ jobs:
                   pwd
                   whoami
                   python --version
-                  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-                  source ~/.poetry/env
                   poetry --version
-                  eval "poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}"
+                  poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}
                   poetry update
             - save
             - store_artifacts:
@@ -206,10 +206,8 @@ jobs:
                   pwd
                   whoami
                   python --version
-                  curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-                  source ~/.poetry/env
                   poetry --version
-                  eval "poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}"
+                  poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}
                   poetry install
             - save
             - notify_fail_slack
@@ -234,12 +232,16 @@ jobs:
       - sparse
       - restore
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - run:
           name: Test
           command: |
+            which google-chrome
+            which chromedriver
             source $(find . -name ${CIRCLE_PROJECT_REPONAME}*)/bin/activate
             make ut
-            bash <(curl -s https://codecov.io/bash)
+      - codecov/upload
       - store_artifacts:
           path: ./screenshot.png
       - notify_success_slack
