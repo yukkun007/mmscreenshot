@@ -200,15 +200,11 @@ jobs:
           condition:
             matches: { pattern: "^dependabot.+$", value: << pipeline.git.branch >> }
           steps:
-            - browser-tools/install-chrome
-            - browser-tools/install-chromedriver
             - run:
                 name: Install
                 command: |
                   pwd
                   whoami
-                  which google-chrome
-                  which chromedriver
                   python --version
                   poetry --version
                   poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}
@@ -236,9 +232,13 @@ jobs:
       - sparse
       - restore
       - checkout
+      - browser-tools/install-chrome
+      - browser-tools/install-chromedriver
       - run:
           name: Test
           command: |
+            which google-chrome
+            which chromedriver
             source $(find . -name ${CIRCLE_PROJECT_REPONAME}*)/bin/activate
             make ut
       - codecov/upload
