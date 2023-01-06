@@ -10,6 +10,7 @@ executors:
 
 orbs:
   slack: circleci/slack@4.4.4
+  browser-tools: circleci/browser-tools@1.4.0
   codecov: codecov/codecov@3.2.3
 
 commands:
@@ -204,6 +205,8 @@ jobs:
                 command: |
                   pwd
                   whoami
+                  which google-chrome
+                  which chromedriver
                   python --version
                   poetry --version
                   poetry config virtualenvs.path ${CIRCLE_WORKING_DIRECTORY}
