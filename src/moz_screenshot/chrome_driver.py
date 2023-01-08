@@ -2,6 +2,7 @@ import os
 import logging
 from PIL import Image
 from selenium.webdriver import Chrome, ChromeOptions
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.remote.webelement import WebElement
@@ -47,7 +48,7 @@ class ChromeDriver:
 
     def screenshot(self, url: str, xpath: str, out_file: str = "/tmp/screenshot.png"):
         self._driver.get(url)
-        element: WebElement = self._driver.find_element_by_xpath(xpath)
+        element: WebElement = self._driver.find_element(By.XPATH, xpath)
 
         # 「element.screenshot_as_png」は、古いchromeだと実装されていないようで下記のようなエラーになる
         # Message: unknown command: session/..../element/..../screenshot
@@ -68,7 +69,7 @@ class ChromeDriver:
 
     def get_text(self, url: str, xpath: str):
         self._driver.get(url)
-        text = self._driver.find_element_by_xpath(xpath).text
+        text = self._driver.find_element(By.XPATH, xpath).text
         return text
 
     def _wait(self) -> None:
