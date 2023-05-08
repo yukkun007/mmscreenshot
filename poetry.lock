@@ -883,21 +883,21 @@ use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "selenium"
-version = "4.9.0"
+version = "4.9.1"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "selenium-4.9.0-py3-none-any.whl", hash = "sha256:4c19e6aac202719373108d53a5a8e9336ba8d2b25822ca32ae6ff37acbabbdbe"},
-    {file = "selenium-4.9.0.tar.gz", hash = "sha256:478fae77cdfaec32adb1e68d59632c8c191f920535282abcaa2d1a3d98655624"},
+    {file = "selenium-4.9.1-py3-none-any.whl", hash = "sha256:82aedaa85d55bc861f4c89ff9609e82f6c958e2e1e3da3ffcc36703f21d3ee16"},
+    {file = "selenium-4.9.1.tar.gz", hash = "sha256:3444f4376321530c36ce8355b6b357d8cf4a7d588ce5cf772183465930bbed0e"},
 ]
 
 [package.dependencies]
 certifi = ">=2021.10.8"
 trio = ">=0.17,<1.0"
 trio-websocket = ">=0.9,<1.0"
-urllib3 = {version = ">=1.26,<2.0", extras = ["socks"]}
+urllib3 = {version = ">=1.26,<3", extras = ["socks"]}
 
 [[package]]
 name = "setuptools"
@@ -1235,4 +1235,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "16337df0192f3b7461d8fa50a0549b7df84216aa532835cad4a5c9877afb3a5f"
+content-hash = "a709f4b65bc3ceb7e6d02df6412ae8c8b1b1f8d789154ff8700abe8709cc070e"
