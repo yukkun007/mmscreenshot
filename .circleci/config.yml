@@ -11,7 +11,7 @@ executors:
 orbs:
   slack: circleci/slack@4.12.5
   browser-tools: circleci/browser-tools@1.4.6
-  codecov: codecov/codecov@3.2.5
+  codecov: codecov/codecov@3.3.0
 
 commands:
   notify_success_slack:
