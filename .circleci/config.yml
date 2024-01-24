@@ -9,7 +9,7 @@ executors:
     working_directory: ~/CircleCIWork
 
 orbs:
-  slack: circleci/slack@4.12.5
+  slack: circleci/slack@4.12.6
   browser-tools: circleci/browser-tools@1.4.6
   codecov: codecov/codecov@3.3.0
 
